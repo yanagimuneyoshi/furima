@@ -13,25 +13,26 @@
     <div class="logo">COACHTECH</div>
     <input type="text" placeholder="なにをお探しですか？" class="search-bar">
     <div class="auth-buttons">
-      @if (Auth::check())
       <form method="POST" action="{{ route('logout') }}">
         @csrf
         <button type="submit" class="logout">ログアウト</button>
       </form>
       <a href="{{ route('mypage') }}" class="mypage">マイページ</a>
-      @else
-      <a href="{{ route('login') }}" class="login">ログイン</a>
-      <a href="{{ route('register') }}" class="register">会員登録</a>
-      @endif
       <a href="{{ route('sell') }}" class="sell">出品</a>
     </div>
   </header>
   <main>
     <div class="profile-section">
-      <div class="profile-pic"></div>
+      <div class="profile-pic">
+        @if (Auth::user()->profile_pic)
+        <img src="{{ asset('storage/' . Auth::user()->profile_pic) }}" alt="Profile Picture">
+        @else
+        <img src="{{ asset('images/default-profile.png') }}" alt="Default Profile Picture">
+        @endif
+      </div>
       <div class="profile-info">
-        <h2>ユーザー名</h2>
-        <button class="edit-profile">プロフィールを編集</button>
+        <h2>{{ Auth::user()->name }}</h2>
+        <a href="{{ route('profile.edit') }}" class="edit-profile">プロフィールを編集</a>
       </div>
     </div>
     <div class="tabs">

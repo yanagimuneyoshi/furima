@@ -24,33 +24,26 @@ header {
   padding: 5px;
 }
 
+.auth-buttons {
+  display: flex;
+  align-items: center;
+}
+
 .auth-buttons button,
 .auth-buttons a {
   margin-left: 10px;
   padding: auto;
-  background-color: #080808;
-  color: #f8f8f8;
+  background-color: #040404;
+  color: #ffffff;
   border: 1px solid #000;
   cursor: pointer;
   text-decoration: none;
-  display: inline-block;
 }
 
 .auth-buttons .sell {
-
-  margin-left: 10px;
-  padding: 5px 10px;
-  background-color: #fff;
-  color: #050505;
-  border: 1px solid #000;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-
-}
-
-.auth-buttons form {
-  display: inline;
+  padding: 5px;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 main {
@@ -66,30 +59,41 @@ main {
 .profile-pic {
   width: 100px;
   height: 100px;
-  background-color: #ccc;
   border-radius: 50%;
+  overflow: hidden;
   margin-right: 20px;
+}
+
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .profile-info {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
 }
 
-.edit-profile {
+.profile-info h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.profile-info .edit-profile {
   margin-top: 10px;
   padding: 5px 10px;
-  background-color: #fff;
-  color: #000;
-  border: 1px solid #000;
+  background-color: #ffffff;
+  color: #ee4343;
+  border: 1px solid #ee4343;
   cursor: pointer;
+  text-decoration: none;
+  text-align: center;
 }
 
 .tabs {
   display: flex;
   border-bottom: 1px solid #ccc;
-  margin-bottom: 20px;
 }
 
 .tab {
@@ -110,6 +114,7 @@ main {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+  margin-top: 20px;
 }
 
 .item {

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class UserController extends Controller
 {
@@ -33,6 +32,11 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('profile_pic')) {
+            // 古いプロフィール画像を削除する（必要に応じて）
+            if ($user->profile_pic && \Storage::exists('public/' . $user->profile_pic)) {
+                \Storage::delete('public/' . $user->profile_pic);
+            }
+
             $profilePicPath = $request->file('profile_pic')->store('profile_pics', 'public');
             $user->profile_pic = $profilePicPath;
         }
