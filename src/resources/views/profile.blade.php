@@ -30,7 +30,7 @@
           @if ($user->profile_pic)
           <img src="{{ asset('storage/' . $user->profile_pic) }}" alt="プロフィール画像">
           @else
-          <img src="{{ asset('images/default-profile.png') }}" alt="デフォルトプロフィール画像">
+          <img src="{{ asset('images/default-profile.png') }}" alt="">
           @endif
         </div>
         <label for="profile_pic" class="profile-pic-label">画像を選択する</label>

@@ -12,7 +12,9 @@ class CreateCategoriesTable extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id('categoryID');
+            $table->unsignedBigInteger('user_id');
             $table->string('name');
+            $table->foreign('user_id')->references('userID')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

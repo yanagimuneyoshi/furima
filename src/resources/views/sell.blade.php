@@ -23,16 +23,16 @@
   </header>
   <main>
     <h1>商品の出品</h1>
-    <form id="item-form" action="{{ route('items.store') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('items.store') }}" method="post" enctype="multipart/form-data">
       @csrf
       <div class="form-group">
         <label for="item_image">商品画像</label>
-        <input type="file" id="item_image" name="item_image" accept="image/*" required>
-        <div id="image-preview" class="image-preview"></div>
+        <input type="file" id="item_image" name="item_image" required>
+        <img id="preview" src="#" alt="プレビュー画像" style="display:none; width: 150px; height: 150px;" />
       </div>
       <div class="form-group">
         <label for="category">カテゴリー</label>
-        <input type="text" id="category" name="category_input" placeholder="カテゴリーを入力してEnterを押してください">
+        <input type="text" id="category" name="category" placeholder="カテゴリーを入力してEnterを押してください">
         <div id="category-container" class="categories"></div>
         <input type="hidden" name="categories" id="categories">
       </div>
@@ -59,6 +59,18 @@
     </form>
   </main>
   <script>
+    document.getElementById('item_image').addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('preview').setAttribute('src', e.target.result);
+          document.getElementById('preview').style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
     document.getElementById('price').addEventListener('input', function(e) {
       if (e.target.value < 0) {
         e.target.value = 0;
@@ -74,10 +86,6 @@
           e.target.value = '';
         }
       }
-    });
-
-    document.getElementById('item-form').addEventListener('submit', function(e) {
-      updateCategoriesInput();
     });
 
     function addCategoryTag(category) {
@@ -103,22 +111,6 @@
       });
       document.getElementById('categories').value = categories.join(',');
     }
-
-    document.getElementById('item_image').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          const img = document.createElement('img');
-          img.src = event.target.result;
-          img.className = 'image-preview';
-          const previewContainer = document.getElementById('image-preview');
-          previewContainer.innerHTML = '';
-          previewContainer.appendChild(img);
-        }
-        reader.readAsDataURL(file);
-      }
-    });
   </script>
 </body>
 
