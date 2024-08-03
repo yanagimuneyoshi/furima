@@ -19,4 +19,5 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/mypage/edit', [UserController::class, 'edit'])->name('profile.edit');
   Route::post('/mypage/edit', [UserController::class, 'update'])->name('profile.update');
   Route::get('/sell', [ItemController::class, 'create'])->name('sell');
+  Route::post('/sell', [ItemController::class, 'store'])->name('items.store');
 });

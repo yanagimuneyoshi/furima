@@ -23,7 +23,7 @@
       </ul>
     </div>
     @endif
-    <form action="/login" method="post">
+    <form action="{{ route('login') }}" method="post">
       @csrf
       <div class="form-group">
         <label for="email">メールアドレス</label>
@@ -35,7 +35,7 @@
       </div>
       <button type="submit" class="login-button">ログインする</button>
     </form>
-    <p class="register-link"><a href="/register">会員登録はこちら</a></p>
+    <p class="register-link"><a href="{{ route('register') }}">会員登録はこちら</a></p>
   </main>
 </body>
 
