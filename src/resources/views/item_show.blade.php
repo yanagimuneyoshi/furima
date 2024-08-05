@@ -38,7 +38,10 @@
         <div class="actions">
           <span class="favorite-count">★ 3</span>
           <span class="comment-count">💬 14</span>
-          <button class="buy-button">購入する</button>
+          <form action="{{ route('buy', $item->id) }}" method="POST">
+            @csrf
+            <button type="submit" class="buy-button">購入する</button>
+          </form>
         </div>
         <div class="description">
           <h2>商品説明</h2>
