@@ -85,6 +85,40 @@ main {
 
 .item {
   width: 100%;
-  padding-bottom: 100%;
+  padding-bottom: 5%;
   background-color: #ccc;
+}
+
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  /* アイテム間のスペースを調整 */
+}
+
+.item {
+  width: 160px;
+  /* 各アイテムの幅を設定 */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(108, 88, 88, 0.1);
+}
+
+.item img {
+  width: 100%;
+  /* 画像をアイテムの幅に合わせて表示 */
+  height: auto;
+  /* 高さを自動調整 */
+  display: block;
+}
+
+.item-details {
+  padding: 10px;
+  /* 詳細部分の内側余白を調整 */
+}
+
+.item-details p {
+  margin: 5px 0;
+  /* 各詳細行の間隔を調整 */
 }

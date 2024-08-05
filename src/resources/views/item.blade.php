@@ -34,14 +34,24 @@
       <button class="tab">マイリスト</button>
     </div>
     <div class="items">
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
+      @foreach($items as $item)
+      <div class="item">
+        <img src="{{ asset('storage/' . $item->image_url) }}" alt="{{ $item->title }}">
+        <div class="item-details">
+          <p>カテゴリー:
+            @foreach($item->categories as $category)
+            {{ $category->name }}
+            @if(!$loop->last)
+            ,
+            @endif
+            @endforeach
+          </p>
+          <p>状態: {{ $item->condition }}</p>
+          <p>商品名: {{ $item->title }}</p>
+          <p>価格: ¥{{ number_format($item->price) }}</p>
+        </div>
+      </div>
+      @endforeach
     </div>
   </main>
 </body>

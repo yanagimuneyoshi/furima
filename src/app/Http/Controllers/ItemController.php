@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
     public function index()
     {
-        // トップページの処理
-        return view('item');
+        $items = Item::with('categories')->get();
+        return view('item', compact('items'));
     }
 
     public function create()
@@ -32,7 +31,7 @@ class ItemController extends Controller
         ]);
 
         $item = new Item();
-        $item->user_id = Auth::id();
+        $item->user_id = auth()->id();
         if ($request->hasFile('item_image')) {
             $item->image_url = $request->file('item_image')->store('item_images', 'public');
         }
@@ -42,14 +41,9 @@ class ItemController extends Controller
         $item->price = $request->input('price');
         $item->save();
 
-        // カテゴリの保存
         $categories = explode(',', $request->input('categories'));
         foreach ($categories as $categoryName) {
-            $category = new Category();
-            $category->name = trim($categoryName);
-            $category->user_id = Auth::id();
-            $category->save();
-
+            $category = Category::firstOrCreate(['name' => trim($categoryName), 'user_id' => auth()->id()]);
             $item->categories()->attach($category->id);
         }
 
