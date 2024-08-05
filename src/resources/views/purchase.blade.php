@@ -39,11 +39,16 @@
         <div class="purchase-options">
           <div class="option">
             <span>支払い方法</span>
-            <a href="#">変更する</a>
+            <a href="#" onclick="showPaymentOptions()">変更する</a>
+            <select id="payment-method" style="display: none;" onchange="updatePaymentMethod()">
+              <option value="コンビニ払い" selected>コンビニ払い</option>
+              <option value="クレジットカード">クレジットカード</option>
+              <option value="銀行振込">銀行振込</option>
+            </select>
           </div>
           <div class="option">
             <span>配送先</span>
-            <a href="#">変更する</a>
+            <a href="{{ route('purchase.address', ['item_id' => $item->id]) }}">変更する</a>
           </div>
         </div>
       </div>
@@ -59,13 +64,23 @@
           </tr>
           <tr>
             <th>支払い方法</th>
-            <td>コンビニ払い</td>
+            <td id="selected-payment-method">コンビニ払い</td>
           </tr>
         </table>
         <button class="buy-button">購入する</button>
       </div>
     </div>
   </main>
+  <script>
+    function showPaymentOptions() {
+      document.getElementById('payment-method').style.display = 'inline-block';
+    }
+
+    function updatePaymentMethod() {
+      var paymentMethod = document.getElementById('payment-method').value;
+      document.getElementById('selected-payment-method').innerText = paymentMethod;
+    }
+  </script>
 </body>
 
 </html>
