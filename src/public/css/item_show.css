@@ -1,0 +1,173 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+header .logo {
+  font-size: 24px;
+}
+
+header .search-bar {
+  width: 300px;
+  padding: 5px;
+}
+
+header .auth-buttons {
+  display: flex;
+  align-items: center;
+}
+
+header .auth-buttons a,
+header .auth-buttons button {
+  color: #fff;
+  margin-left: 10px;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+header .auth-buttons button {
+  padding: 5px 10px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+}
+
+header .auth-buttons .sell {
+  background-color: #e74c3c;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.item-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.item-image {
+  width: 50%;
+  text-align: center;
+}
+
+.item-image img {
+  max-width: 100%;
+  border: 1px solid #ddd;
+}
+
+.item-details {
+  width: 50%;
+  padding: 0 20px;
+}
+
+.item-details h1 {
+  font-size: 24px;
+  margin: 0 0 10px;
+}
+
+.item-details .brand {
+  font-size: 18px;
+  color: #555;
+}
+
+.item-details .price {
+  font-size: 20px;
+  color: #e74c3c;
+  margin: 10px 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.actions .favorite-count,
+.actions .comment-count {
+  margin-right: 20px;
+}
+
+.actions .buy-button {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.description,
+.additional-info {
+  margin: 20px 0;
+}
+
+.description h2,
+.additional-info h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.description p,
+.additional-info p {
+  margin: 5px 0;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 760px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  header .search-bar {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  header .auth-buttons {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  header .auth-buttons a,
+  header .auth-buttons button {
+    margin: 5px 0;
+  }
+
+  .item-container {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .item-image,
+  .item-details {
+    width: 100%;
+  }
+
+  .item-details {
+    padding: 10px 0;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions .favorite-count,
+  .actions .comment-count {
+    margin: 10px 0;
+  }
+}

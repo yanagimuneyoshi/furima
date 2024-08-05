@@ -49,4 +49,12 @@ class ItemController extends Controller
 
         return redirect()->route('mypage')->with('success', '商品が出品されました。');
     }
+
+
+    public function show($item_id)
+    {
+        $item = Item::with('categories')->findOrFail($item_id);
+        return view('item_show', compact('item'));
+    }
+
 }

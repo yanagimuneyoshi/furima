@@ -21,3 +21,6 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/sell', [ItemController::class, 'create'])->name('sell');
   Route::post('/sell', [ItemController::class, 'store'])->name('items.store');
 });
+
+
+Route::get('/item/{item}', [ItemController::class, 'show'])->name('item.show');
