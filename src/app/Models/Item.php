@@ -16,7 +16,7 @@ class Item extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'userID');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function categories()
@@ -26,16 +26,21 @@ class Item extends Model
 
     public function orders()
     {
-        return $this->hasMany(Order::class, 'item_id', 'itemID');
+        return $this->hasMany(Order::class, 'item_id', 'id');
     }
 
     public function favorites()
     {
-        return $this->hasMany(Favorite::class, 'item_id', 'itemID');
+        return $this->hasMany(Favorite::class, 'item_id', 'id');
     }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'item_id', 'itemID');
+        return $this->hasMany(Comment::class, 'item_id', 'id');
+    }
+
+    public function favoritedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'item_id', 'user_id');
     }
 }

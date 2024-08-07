@@ -6,6 +6,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\FavoriteController;
 
 
 Route::get('/', [ItemController::class, 'index'])->name('home');
@@ -31,3 +32,4 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/item/{item}', [ItemController::class, 'show'])->name('item.show');
 // Route::get('/purchase/{item_id}', [PurchaseController::class, 'show'])->name('purchase');
 Route::post('/buy/{id}', [PurchaseController::class, 'buy'])->name('buy');
+Route::post('/favorites/toggle/{item}', [FavoriteController::class, 'toggle'])->name('favorites.toggle');

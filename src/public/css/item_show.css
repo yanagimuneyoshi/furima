@@ -61,6 +61,7 @@ header .auth-buttons .sell {
 .item-image {
   width: 50%;
   text-align: center;
+  padding: 7%;
 }
 
 .item-image img {

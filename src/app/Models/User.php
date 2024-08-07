@@ -26,21 +26,21 @@ class User extends Authenticatable
 
     public function items()
     {
-        return $this->hasMany(Item::class, 'user_id', 'id'); // ここを修正
+        return $this->hasMany(Item::class, 'user_id', 'id');
     }
 
     public function orders()
     {
-        return $this->hasMany(Order::class, 'user_id', 'id'); // ここを修正
+        return $this->hasMany(Order::class, 'user_id', 'id');
     }
 
     public function favorites()
     {
-        return $this->hasMany(Favorite::class, 'user_id', 'id'); // ここを修正
+        return $this->belongsToMany(Item::class, 'favorites', 'user_id', 'item_id');
     }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'user_id', 'id'); // ここを修正
+        return $this->hasMany(Comment::class, 'user_id', 'id');
     }
 }

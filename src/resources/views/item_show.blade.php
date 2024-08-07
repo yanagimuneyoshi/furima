@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>商品詳細</title>
   <link rel="stylesheet" href="{{ asset('css/item_show.css') }}">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -36,7 +37,11 @@
         <p class="brand">ブランド名</p>
         <p class="price">¥{{ number_format($item->price) }}(値段)</p>
         <div class="actions">
-          <span class="favorite-count">★ 3</span>
+          <span class="favorite-count">
+            <button class="favorite-button {{ Auth::check() && Auth::user()->favorites()->where('item_id', $item->id)->exists() ? 'favorited' : '' }}" id="favorite-button" data-item-id="{{ $item->id }}">
+              {{ Auth::check() && Auth::user()->favorites()->where('item_id', $item->id)->exists() ? '★' : '☆' }}
+            </button> <span id="favorite-count">{{ $item->favoritedByUsers()->count() }}</span>
+          </span>
           <span class="comment-count">💬 14</span>
           <form action="{{ route('buy', $item->id) }}" method="POST">
             @csrf
@@ -64,6 +69,45 @@
       </div>
     </div>
   </main>
+
+  @if(Auth::check())
+  <script>
+    $(document).ready(function() {
+      $('#favorite-button').click(function(e) {
+        e.preventDefault();
+        var itemId = $(this).data('item-id');
+        $.ajax({
+          url: '{{ route("favorites.toggle", "") }}/' + itemId,
+          type: 'POST',
+          data: {
+            _token: '{{ csrf_token() }}'
+          },
+          success: function(response) {
+            if (response.success) {
+              var favoriteCount = response.favorites_count;
+              $('#favorite-count').text(favoriteCount);
+              var button = $('#favorite-button');
+              if (response.is_favorited) {
+                button.addClass('favorited').text('★');
+              } else {
+                button.removeClass('favorited').text('☆');
+              }
+            }
+          }
+        });
+      });
+    });
+  </script>
+  @else
+  <script>
+    $(document).ready(function() {
+      $('#favorite-button').click(function(e) {
+        e.preventDefault();
+        window.location.href = '{{ route("login") }}';
+      });
+    });
+  </script>
+  @endif
 </body>
 
 </html>
