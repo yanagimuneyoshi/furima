@@ -32,7 +32,6 @@ header {
 .auth-buttons button,
 .auth-buttons a {
   margin-left: 10px;
-
   background-color: #fff;
   color: #000;
   border: 1px solid #000;
@@ -54,19 +53,67 @@ main {
   justify-content: space-between;
 }
 
-.item-image {
+.left-column {
   flex: 1;
   text-align: center;
-  margin-right: 20px;
+}
+
+.right-column {
+  flex: 2;
+}
+
+.item-image {
+  margin-bottom: 20px;
 }
 
 .item-image img {
-  max-width: 100%;
+  margin-top: 100px;
+  max-width: 80%;
   height: auto;
 }
 
-.comment-details {
-  flex: 2;
+.item-details {
+  margin-bottom: 20px;
+}
+h1 {
+
+padding: 6%;
+
+}
+
+p {
+
+  padding: 3%;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.favorite-count,
+.comment-count {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.favorite-button {
+  font-size: 24px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.favorite-button.favorited {
+  color: rgb(0, 0, 0);
+}
+
+.comment-details  .h1 {
+  margin-top: 90px;
 }
 
 .comments-list {
@@ -87,13 +134,18 @@ main {
 .comment-body {
   margin-top: 5px;
   flex: 1;
+  padding: 5%;
+  
+}
+form{
+  padding-top: 3%;
 }
 
 .delete-button {
   background-color: #ff6b6b;
   color: #fff;
   border: none;
-  padding: 5px 10px;
+  padding: 10px 10px;
   cursor: pointer;
 }
 
@@ -136,8 +188,7 @@ textarea {
     flex-direction: column;
   }
 
-  .item-image {
+  .left-column {
     margin-bottom: 20px;
-    margin-right: 0;
   }
 }
