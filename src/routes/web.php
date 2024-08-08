@@ -40,3 +40,4 @@ Route::post('/favorites/toggle/{item}', [FavoriteController::class, 'toggle'])->
 // コメント表示と投稿のルート
 Route::get('/comments/{item_id}', [CommentController::class, 'show'])->name('comments.show');
 Route::post('/comments/{item_id}', [CommentController::class, 'store'])->name('comments.store');
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');

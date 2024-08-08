@@ -32,5 +32,12 @@ class CommentController extends Controller
 
     return redirect()->route('comments.show', ['item_id' => $item_id]);
   }
+
+  public function destroy(Comment $comment)
+  {
+    $comment->delete();
+    return back()->with('success', 'コメントが削除されました。');
+  }
+
   
 }

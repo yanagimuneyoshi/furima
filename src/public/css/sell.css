@@ -49,55 +49,18 @@ main {
   padding: 20px;
 }
 
-.comment-container {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  /* Added for responsiveness */
-}
-
-.item-image {
-  flex: 1;
+h1 {
   text-align: center;
-  margin-right: 20px;
-}
-
-.item-image img {
-  max-width: 100%;
-  height: auto;
-}
-
-.comment-details {
-  flex: 2;
-}
-
-.comment-details h1,
-.comment-details h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-}
-
-.comments-list {
   margin-bottom: 20px;
 }
 
-.comment {
-  border-bottom: 1px solid #dee2e6;
-  padding: 10px 0;
-}
-
-.comment-user {
-  font-weight: bold;
-}
-
-.comment-body {
-  margin-top: 5px;
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
@@ -110,46 +73,55 @@ main {
   font-weight: bold;
 }
 
-textarea {
+.form-group input,
+.form-group textarea,
+.form-group select {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
-.comment-button {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #007bff;
+.form-group textarea {
+  resize: vertical;
+}
+
+.submit-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #ff6b6b;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
 }
 
-.comment-button:hover {
-  background-color: #0056b3;
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .comment-container {
-    flex-direction: column;
-  }
+.category-tag {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin: 5px;
+}
 
-  .item-image {
-    margin-right: 0;
-    margin-bottom: 20px;
-  }
+.category-tag span {
+  cursor: pointer;
+  margin-left: 5px;
+  color: red;
+}
 
-  .auth-buttons button,
-  .auth-buttons a {
-    margin-left: 5px;
-    padding: 5px 8px;
-  }
-
-  .search-bar {
-    width: 200px;
-    padding: 3px;
-  }
+.image-preview img {
+  max-width: 150px;
+  /* 画像の最大幅を150pxに設定 */
+  max-height: 150px;
+  /* 画像の最大高さを150pxに設定 */
 }

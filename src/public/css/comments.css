@@ -1,5 +1,8 @@
 body {
   font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
 }
 
 header {
@@ -29,7 +32,7 @@ header {
 .auth-buttons button,
 .auth-buttons a {
   margin-left: 10px;
-  
+
   background-color: #fff;
   color: #000;
   border: 1px solid #000;
@@ -41,15 +44,14 @@ header {
   background-color: #000;
   color: #fff;
 }
-.comment-container {
-  max-width: 1000px;
-  margin: 20px auto;
+
+main {
   padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-container {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
 }
 
 .item-image {
@@ -67,12 +69,6 @@ header {
   flex: 2;
 }
 
-.comment-details h1,
-.comment-details h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-}
-
 .comments-list {
   margin-bottom: 20px;
 }
@@ -80,6 +76,8 @@ header {
 .comment {
   border-bottom: 1px solid #dee2e6;
   padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
 }
 
 .comment-user {
@@ -88,6 +86,19 @@ header {
 
 .comment-body {
   margin-top: 5px;
+  flex: 1;
+}
+
+.delete-button {
+  background-color: #ff6b6b;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #e63946;
 }
 
 .form-group {
@@ -118,4 +129,15 @@ textarea {
 
 .comment-button:hover {
   background-color: #0056b3;
+}
+
+@media (max-width: 760px) {
+  .comment-container {
+    flex-direction: column;
+  }
+
+  .item-image {
+    margin-bottom: 20px;
+    margin-right: 0;
+  }
 }
