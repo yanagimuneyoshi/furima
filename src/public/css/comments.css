@@ -1,0 +1,121 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #000;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.search-bar {
+  width: 300px;
+  padding: 5px;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.auth-buttons button,
+.auth-buttons a {
+  margin-left: 10px;
+  
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.auth-buttons .sell {
+  background-color: #000;
+  color: #fff;
+}
+.comment-container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
+}
+
+.item-image {
+  flex: 1;
+  text-align: center;
+  margin-right: 20px;
+}
+
+.item-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+.comment-details {
+  flex: 2;
+}
+
+.comment-details h1,
+.comment-details h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.comments-list {
+  margin-bottom: 20px;
+}
+
+.comment {
+  border-bottom: 1px solid #dee2e6;
+  padding: 10px 0;
+}
+
+.comment-user {
+  font-weight: bold;
+}
+
+.comment-body {
+  margin-top: 5px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.comment-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.comment-button:hover {
+  background-color: #0056b3;
+}

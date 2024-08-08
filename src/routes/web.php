@@ -7,6 +7,9 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\CommentController;
+
+
 
 
 Route::get('/', [ItemController::class, 'index'])->name('home');
@@ -33,3 +36,7 @@ Route::get('/item/{item}', [ItemController::class, 'show'])->name('item.show');
 // Route::get('/purchase/{item_id}', [PurchaseController::class, 'show'])->name('purchase');
 Route::post('/buy/{id}', [PurchaseController::class, 'buy'])->name('buy');
 Route::post('/favorites/toggle/{item}', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
+
+// コメント表示と投稿のルート
+Route::get('/comments/{item_id}', [CommentController::class, 'show'])->name('comments.show');
+Route::post('/comments/{item_id}', [CommentController::class, 'store'])->name('comments.store');

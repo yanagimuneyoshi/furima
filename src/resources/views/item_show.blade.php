@@ -42,7 +42,9 @@
               {{ Auth::check() && Auth::user()->favorites()->where('item_id', $item->id)->exists() ? '★' : '☆' }}
             </button> <span id="favorite-count">{{ $item->favoritedByUsers()->count() }}</span>
           </span>
-          <span class="comment-count">💬 14</span>
+          <span class="comment-count">
+            <a href="{{ route('comments.show', $item->id) }}" id="comment-count">💬 {{ $item->comments()->count() }}</a>
+          </span>
           <form action="{{ route('buy', $item->id) }}" method="POST">
             @csrf
             <button type="submit" class="buy-button">購入する</button>
