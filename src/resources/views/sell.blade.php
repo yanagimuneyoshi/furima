@@ -39,8 +39,8 @@
       <div class="form-group">
         <label for="condition">商品の状態</label>
         <select id="condition" name="condition" required>
-          <option value="新品">新品</option>
-          <option value="中古">中古</option>
+          <option value="良好">良好</option>
+          <option value="不良">不良</option>
         </select>
       </div>
       <div class="form-group">

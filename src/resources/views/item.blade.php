@@ -11,7 +11,10 @@
 <body>
   <header>
     <div class="logo">COACHTECH</div>
-    <input type="text" placeholder="なにをお探しですか？" class="search-bar">
+    <!-- <input type="text" placeholder="なにをお探しですか？" class="search-bar"> -->
+    <form action="{{ route('item.search') }}" method="GET" class="search-form">
+      <input type="text" name="query" placeholder="なにをお探しですか？" class="search-bar">
+    </form>
     <div class="auth-buttons">
       @if (Auth::check())
       <!-- ログインしているユーザー向けのコンテンツ -->
@@ -74,6 +77,30 @@
         </a>
       </div>
       @endforeach
+      @section('content')
+      <div class="items">
+        @foreach($items as $item)
+        <div class="item">
+          <a href="{{ route('item.show', $item->id) }}">
+            <img src="{{ asset('storage/' . $item->image_url) }}" alt="{{ $item->title }}">
+            <div class="item-details">
+              <p>カテゴリー:
+                @foreach($item->categories as $category)
+                {{ $category->name }}
+                @if(!$loop->last)
+                ,
+                @endif
+                @endforeach
+              </p>
+              <p>状態: {{ $item->condition }}</p>
+              <p>商品名: {{ $item->title }}</p>
+              <p>価格: ¥{{ number_format($item->price) }}</p>
+            </div>
+          </a>
+        </div>
+        @endforeach
+      </div>
+      @endsection
     </div>
 
   </main>

@@ -122,3 +122,47 @@ main {
   margin: 5px 0;
   /* 各詳細行の間隔を調整 */
 }
+
+/* resources/css/item.css */
+.search-form {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.search-bar {
+  flex-grow: 1;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.item {
+  width: calc(25% - 20px);
+  background-color: #f8f8f8;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.item-details {
+  margin-top: 10px;
+}
+
+.item-details p {
+  margin: 0 0 5px;
+  font-size: 14px;
+  color: #555;
+}

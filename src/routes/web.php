@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommentController;
-
+use App\Http\Controllers\SearchController;
 
 
 
@@ -41,3 +41,4 @@ Route::post('/favorites/toggle/{item}', [FavoriteController::class, 'toggle'])->
 Route::get('/comments/{item_id}', [CommentController::class, 'show'])->name('comments.show');
 Route::post('/comments/{item_id}', [CommentController::class, 'store'])->name('comments.store');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+Route::get('/search', [SearchController::class, 'search'])->name('item.search');
