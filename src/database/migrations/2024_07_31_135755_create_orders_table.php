@@ -12,7 +12,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('item_id');
             $table->unsignedBigInteger('user_id');
-            $table->decimal('total_price', 10, 2);
+            $table->integer('total_price');
             $table->timestamps();
 
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade'); // ここを修正

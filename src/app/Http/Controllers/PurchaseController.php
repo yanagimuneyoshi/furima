@@ -1,10 +1,12 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Stripe\Stripe;
+use Stripe\Charge;
+use App\Models\Order;
 
 class PurchaseController extends Controller
 {
@@ -16,11 +18,9 @@ class PurchaseController extends Controller
 
   public function purchase($item_id)
   {
-    // 購入ページの表示処理
     $item = Item::findOrFail($item_id);
     return view('purchase', compact('item'));
   }
-
 
   public function editAddress($item_id)
   {
@@ -45,9 +45,6 @@ class PurchaseController extends Controller
       'building' => 'nullable|string|max:255',
     ]);
 
-    $item = Item::findOrFail($item_id);
-
-    // ユーザーの住所情報を更新する処理
     $user = auth()->user();
     $user->postal_code = $request->input('postal_code');
     $user->address = $request->input('address');
@@ -55,5 +52,63 @@ class PurchaseController extends Controller
     $user->save();
 
     return redirect()->route('purchase', ['item_id' => $item_id])->with('success', '住所が更新されました。');
+  }
+
+  public function charge(Request $request)
+  {
+    Stripe::setApiKey('sk_test_51PnN81KUcLKzkipSqUeSEdfsYzteisrRIDF7iF6jxmcP1T1F2LETGxKjX2YGXZxJLA6BDj2IGmPqqiAOKABWXld900m1nVUrHb');
+
+    try {
+      if ($request->input('payment_method') === 'クレジットカード') {
+        $charge = Charge::create([
+          'amount' => $request->input('amount'),
+          'currency' => 'jpy',
+          'source' => $request->input('token'),
+          'description' => '商品購入: ' . $request->input('item_id'),
+        ]);
+
+        $correctedAmount = $request->input('amount') / 100;
+
+        // クレジットカードの場合のみ金額を修正して保存
+        $this->saveOrder($request->input('item_id'), $request->user()->id, $correctedAmount);
+      } else {
+        // クレジットカード以外の支払い方法の場合
+        $correctedAmount = $request->input('amount') / 100;
+
+        // コンビニ払い、銀行振込の場合も修正した金額を保存
+        $this->saveOrder($request->input('item_id'), $request->user()->id, $correctedAmount);
+
+        // それぞれに応じたレスポンスを返す
+        // if ($request->input('payment_method') === 'コンビニ払い') {
+        //   return response()->json(['success' => true, 'message' => '伝票番号: ×××××']);
+        // } else if ($request->input('payment_method') === '銀行振込') {
+        //   return response()->json(['success' => true, 'message' => '⚪︎×銀行 △◻︎支店123 普通 1234567']);
+        // }
+      }
+
+      return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+      return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    }
+  }
+
+  private function saveOrder($item_id, $user_id, $amount)
+  {
+    Order::create([
+      'item_id' => $item_id,
+      'user_id' => $user_id,
+      'total_price' => $amount,
+    ]);
+  }
+
+  public function savePurchaseData(Request $request)
+  {
+    $order = Order::create([
+      'item_id' => $request->item_id,
+      'user_id' => auth()->id(),
+      'total_price' => $request->input('amount') / 100, // コンビニ払い、銀行振込の場合も金額を修正
+    ]);
+
+    return response()->json(['success' => true]);
   }
 }
