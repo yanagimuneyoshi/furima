@@ -20,7 +20,8 @@
         tab.style.display = 'none';
       });
 
-      document.getElementById(tabName + '-content').style.display = 'block';
+      var activeContent = document.getElementById(tabName + '-content');
+      activeContent.style.display = 'block';
 
       // タブ情報を検索フォームに設定
       document.getElementById('tab').value = tabName;
@@ -37,6 +38,11 @@
         document.querySelector('.search-bar').value = '';
         document.querySelector('.search-form').submit();
       }
+
+      // タブ切り替え時はエラーメッセージを非表示にする
+      document.querySelectorAll('.no-results').forEach(function(message) {
+        message.style.display = 'none';
+      });
     }
 
     // マイリストタブをクリックしたときの処理
@@ -50,7 +56,32 @@
       @endif
     }
 
-    window.onload = initializeTabs; // ページロード時にタブを初期化
+    window.onload = function() {
+      initializeTabs();
+      controlNoResultsMessages(); // ページロード時にメッセージの表示を制御
+    };
+
+    // 検索結果に応じてメッセージの表示を制御する関数
+    function controlNoResultsMessages() {
+      var recommendationsTab = document.getElementById('recommendations-content');
+      var myListTab = document.getElementById('mylist-content');
+
+      if (recommendationsTab) {
+        var recommendationsMessage = recommendationsTab.querySelector('.no-results');
+        if (recommendationsMessage) {
+          var hasItems = recommendationsTab.querySelectorAll('.item').length > 0;
+          recommendationsMessage.style.display = hasItems ? 'none' : 'block';
+        }
+      }
+
+      if (myListTab) {
+        var myListMessage = myListTab.querySelector('.no-results');
+        if (myListMessage) {
+          var hasItems = myListTab.querySelectorAll('.item').length > 0;
+          myListMessage.style.display = hasItems ? 'none' : 'block';
+        }
+      }
+    }
   </script>
   <style>
     .tab.active {
@@ -58,6 +89,11 @@
     }
 
     .tab-content {
+      display: none;
+      /* 初期状態は非表示 */
+    }
+
+    .no-results {
       display: none;
       /* 初期状態は非表示 */
     }
@@ -93,8 +129,8 @@
 
     <div id="recommendations-content" class="tab-content">
       <div class="items">
-        @if($items->isEmpty())
-        <p>一致する商品が見つかりませんでした。</p>
+        @if($items->isEmpty() && request()->has('query'))
+        <p class="no-results" style="display: block;">一致する商品が見つかりませんでした。</p>
         @else
         @foreach($items as $item)
         <div class="item">
@@ -121,7 +157,9 @@
     @if (Auth::check())
     <div id="mylist-content" class="tab-content">
       <div class="items">
-        @if(isset($favorites) && $favorites->isNotEmpty())
+        @if(isset($favorites) && $favorites->isEmpty() && request()->has('query'))
+        <p class="no-results" style="display: block;">一致するお気に入り商品が見つかりませんでした。</p>
+        @else
         @foreach($favorites as $item)
         <div class="item">
           <a href="{{ route('item.show', $item->id) }}">
@@ -140,8 +178,6 @@
           </a>
         </div>
         @endforeach
-        @else
-        <p>一致するお気に入り商品が見つかりませんでした。</p>
         @endif
       </div>
     </div>
