@@ -6,25 +6,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>COACHTECHフリマ</title>
   <link rel="stylesheet" href="{{ asset('css/item.css') }}">
+  <script>
+    // ページ読み込み時にタブを設定する関数
+    function initializeTabs() {
+      var activeTab = '{{ request("tab", "recommendations") }}';
+      switchTab(activeTab, false);
+    }
+
+    // タブの切り替えを処理する関数
+    function switchTab(tabName, resetSearch = false) {
+      var tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(function(tab) {
+        tab.style.display = 'none';
+      });
+
+      document.getElementById(tabName + '-content').style.display = 'block';
+
+      // タブ情報を検索フォームに設定
+      document.getElementById('tab').value = tabName;
+
+      // タブの色を切り替え
+      var buttons = document.querySelectorAll('.tab');
+      buttons.forEach(function(button) {
+        button.classList.remove('active');
+      });
+      document.getElementById(tabName + '-tab').classList.add('active');
+
+      // 検索をリセットする場合
+      if (resetSearch) {
+        document.querySelector('.search-bar').value = '';
+        document.querySelector('.search-form').submit();
+      }
+    }
+
+    // マイリストタブをクリックしたときの処理
+    function handleMyListClick() {
+      @if(Auth::check())
+      // ログインしている場合、マイリストを表示
+      switchTab('mylist', true); // trueを渡して検索をリセット
+      @else
+      // ログインしていない場合、ログイン画面にリダイレクト
+      window.location.href = "{{ route('login') }}";
+      @endif
+    }
+
+    window.onload = initializeTabs; // ページロード時にタブを初期化
+  </script>
+  <style>
+    .tab.active {
+      background-color: #ccc;
+    }
+
+    .tab-content {
+      display: none;
+      /* 初期状態は非表示 */
+    }
+  </style>
 </head>
 
 <body>
   <header>
     <div class="logo">COACHTECH</div>
-    <!-- <input type="text" placeholder="なにをお探しですか？" class="search-bar"> -->
     <form action="{{ route('item.search') }}" method="GET" class="search-form">
       <input type="text" name="query" placeholder="なにをお探しですか？" class="search-bar">
+      <input type="hidden" name="tab" id="tab" value="{{ request('tab', 'recommendations') }}">
     </form>
     <div class="auth-buttons">
       @if (Auth::check())
-      <!-- ログインしているユーザー向けのコンテンツ -->
       <form method="POST" action="{{ route('logout') }}">
         @csrf
         <button type="submit" class="logout">ログアウト</button>
       </form>
       <a href="{{ route('mypage') }}" class="mypage">マイページ</a>
       @else
-      <!-- ログインしていないユーザー向けのコンテンツ -->
       <a href="{{ route('login') }}" class="login">ログイン</a>
       <a href="{{ route('register') }}" class="register">会員登録</a>
       @endif
@@ -33,52 +87,15 @@
   </header>
   <main>
     <div class="tabs">
-      <button class="tab active">おすすめ</button>
-      <button class="tab">マイリスト</button>
+      <button class="tab {{ request('tab', 'recommendations') === 'recommendations' ? 'active' : '' }}" id="recommendations-tab" onclick="switchTab('recommendations', true)">おすすめ</button>
+      <button class="tab {{ request('tab') === 'mylist' ? 'active' : '' }}" id="mylist-tab" onclick="handleMyListClick()">マイリスト</button>
     </div>
-    <!-- <div class="items">
-      @foreach($items as $item)
-      <div class="item">
-        <img src="{{ asset('storage/' . $item->image_url) }}" alt="{{ $item->title }}">
-        <div class="item-details">
-          <p>カテゴリー:
-            @foreach($item->categories as $category)
-            {{ $category->name }}
-            @if(!$loop->last)
-            ,
-            @endif
-            @endforeach
-          </p>
-          <p>状態: {{ $item->condition }}</p>
-          <p>商品名: {{ $item->title }}</p>
-          <p>価格: ¥{{ number_format($item->price) }}</p>
-        </div>
-      </div>
-      @endforeach
-    </div> -->
-    <div class="items">
-      @foreach($items as $item)
-      <div class="item">
-        <a href="{{ route('item.show', $item->id) }}">
-          <img src="{{ asset('storage/' . $item->image_url) }}" alt="{{ $item->title }}">
-          <div class="item-details">
-            <p>カテゴリー:
-              @foreach($item->categories as $category)
-              {{ $category->name }}
-              @if(!$loop->last)
-              ,
-              @endif
-              @endforeach
-            </p>
-            <p>状態: {{ $item->condition }}</p>
-            <p>商品名: {{ $item->title }}</p>
-            <p>価格: ¥{{ number_format($item->price) }}</p>
-          </div>
-        </a>
-      </div>
-      @endforeach
-      @section('content')
+
+    <div id="recommendations-content" class="tab-content">
       <div class="items">
+        @if($items->isEmpty())
+        <p>一致する商品が見つかりませんでした。</p>
+        @else
         @foreach($items as $item)
         <div class="item">
           <a href="{{ route('item.show', $item->id) }}">
@@ -87,9 +104,7 @@
               <p>カテゴリー:
                 @foreach($item->categories as $category)
                 {{ $category->name }}
-                @if(!$loop->last)
-                ,
-                @endif
+                @if(!$loop->last),@endif
                 @endforeach
               </p>
               <p>状態: {{ $item->condition }}</p>
@@ -99,10 +114,38 @@
           </a>
         </div>
         @endforeach
+        @endif
       </div>
-      @endsection
     </div>
 
+    @if (Auth::check())
+    <div id="mylist-content" class="tab-content">
+      <div class="items">
+        @if(isset($favorites) && $favorites->isNotEmpty())
+        @foreach($favorites as $item)
+        <div class="item">
+          <a href="{{ route('item.show', $item->id) }}">
+            <img src="{{ asset('storage/' . $item->image_url) }}" alt="{{ $item->title }}">
+            <div class="item-details">
+              <p>カテゴリー:
+                @foreach($item->categories as $category)
+                {{ $category->name }}
+                @if(!$loop->last),@endif
+                @endforeach
+              </p>
+              <p>状態: {{ $item->condition }}</p>
+              <p>商品名: {{ $item->title }}</p>
+              <p>価格: ¥{{ number_format($item->price) }}</p>
+            </div>
+          </a>
+        </div>
+        @endforeach
+        @else
+        <p>一致するお気に入り商品が見つかりませんでした。</p>
+        @endif
+      </div>
+    </div>
+    @endif
   </main>
 </body>
 

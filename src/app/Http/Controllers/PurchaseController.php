@@ -78,12 +78,6 @@ class PurchaseController extends Controller
         // コンビニ払い、銀行振込の場合も修正した金額を保存
         $this->saveOrder($request->input('item_id'), $request->user()->id, $correctedAmount);
 
-        // それぞれに応じたレスポンスを返す
-        // if ($request->input('payment_method') === 'コンビニ払い') {
-        //   return response()->json(['success' => true, 'message' => '伝票番号: ×××××']);
-        // } else if ($request->input('payment_method') === '銀行振込') {
-        //   return response()->json(['success' => true, 'message' => '⚪︎×銀行 △◻︎支店123 普通 1234567']);
-        // }
       }
 
       return response()->json(['success' => true]);

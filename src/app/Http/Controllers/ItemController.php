@@ -12,7 +12,9 @@ class ItemController extends Controller
     public function index()
     {
         $items = Item::with('categories')->get();
-        return view('item', compact('items'));
+        $favorites = auth()->check() ? auth()->user()->favorites : collect();
+        // return view('item', compact('items'));
+        return view('item', compact('items', 'favorites'));
     }
 
     public function create()
