@@ -6,16 +6,83 @@ use App\Models\Item;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ItemController extends Controller
 {
-    public function index()
+    // public function index(Request $request)
+    // {
+    //     // すべての商品をカテゴリ情報とともに取得
+    //     $items = Item::with('categories')->get()->unique('id');
+
+    //     // ログインしている場合、ログインしているユーザーのお気に入りを取得
+    //     if (auth()->check()) {
+    //         $userId = auth()->id(); // ログインしているユーザーのIDを取得
+
+    //         // 現在のユーザーのお気に入りアイテムのみを取得
+    //         $favorites = Item::whereHas('favorites', function ($query) use ($userId) {
+    //             $query->where('user_id', $userId);
+    //         })
+    //             ->with('categories')
+    //             ->get()
+    //             ->unique('id');
+
+    //         // $favoritesの内容をログに記録
+    //         Log::info('User favorites:', ['favorites' => $favorites]);
+    //     } else {
+    //         $favorites = collect(); // ログインしていない場合、空のコレクション
+    //     }
+
+    //     // リクエストの内容をログに記録
+    //     Log::info('Request query:', $request->all());
+
+    //     // itemsとfavoritesをBladeテンプレートに渡す
+    //     return view('item', compact('items', 'favorites'));
+    // }
+    public function index(Request $request)
     {
-        $items = Item::with('categories')->get();
-        $favorites = auth()->check() ? auth()->user()->favorites : collect();
-        // return view('item', compact('items'));
+        $query = $request->input('query');
+        $tab = $request->input('tab', 'recommendations');
+
+        // すべての商品をカテゴリ情報とともに取得
+        $itemsQuery = Item::with('categories');
+
+        if ($query) {
+            $itemsQuery->where('title', 'LIKE', '%' . $query . '%');
+        }
+
+        $items = $itemsQuery->get()->unique('id');
+
+        // ログインしている場合、ログインしているユーザーのお気に入りを取得
+        if (auth()->check()) {
+            $favoritesQuery = auth()->user()->favorites()->with('categories');
+
+            if ($query) {
+                $favoritesQuery->where('title', 'LIKE', '%' . $query . '%');
+            }
+
+            $favorites = $favoritesQuery->get()->unique('id');
+        } else {
+            $favorites = collect(); // ログインしていない場合、空のコレクション
+        }
+
+        // デバッグ情報をログに記録
+        \Log::info('Request query: ', $request->all());
+        \Log::info('User favorites: ', ['favorites' => $favorites]);
+
+        // itemsとfavoritesをBladeテンプレートに渡す
         return view('item', compact('items', 'favorites'));
     }
+
+
+
+
+
+
+
+
+
+
 
     public function create()
     {
