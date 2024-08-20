@@ -110,7 +110,7 @@ main {
   border-bottom: 2px solid red;
 }
 
-.items {
+/* .items {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
@@ -121,4 +121,46 @@ main {
   width: 100%;
   padding-bottom: 100%;
   background-color: #ccc;
+} */
+
+.items {
+  padding: 1%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  
+}
+
+.item {
+  width: calc(33.333% - 20px);
+  /* 3列に分ける */
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.item img {
+  width: 100%;
+  /* 画像をアイテムの幅に合わせる */
+  height: auto;
+  object-fit: cover;
+  /* 画像を枠に合わせてトリミング */
+}
+
+.item-details {
+  padding: 10px 0;
+}
+
+@media screen and (max-width: 766px) {
+  .item {
+    width: calc(50% - 20px);
+    /* 画面が小さくなった場合は2列に */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .item {
+    width: 100%;
+    /* スマホでは1列に */
+  }
 }

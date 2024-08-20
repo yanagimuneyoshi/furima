@@ -9,7 +9,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SearchController;
-
+use App\Http\Controllers\MypageController;
 // ホームページ
 Route::get('/', [ItemController::class, 'index'])->name('home');
 
@@ -47,3 +47,4 @@ Route::post('/buy/{id}', [PurchaseController::class, 'buy'])->name('buy');
 Route::post('/purchase/payment/{item_id}', [PurchaseController::class, 'processPayment'])->name('stripe.payment');
 Route::post('/purchase/charge', [PurchaseController::class, 'charge']);
 Route::post('/purchase/save', [PurchaseController::class, 'savePurchaseData']);
+Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');

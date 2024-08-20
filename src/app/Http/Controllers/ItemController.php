@@ -67,8 +67,8 @@ class ItemController extends Controller
         }
 
         // デバッグ情報をログに記録
-        \Log::info('Request query: ', $request->all());
-        \Log::info('User favorites: ', ['favorites' => $favorites]);
+        // \Log::info('Request query: ', $request->all());
+        // \Log::info('User favorites: ', ['favorites' => $favorites]);
 
         // itemsとfavoritesをBladeテンプレートに渡す
         return view('item', compact('items', 'favorites'));
