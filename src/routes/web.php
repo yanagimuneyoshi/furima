@@ -10,6 +10,11 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\MypageController;
+use App\Http\Controllers\AdminRegisterController;
+use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\AdminController;
+
+
 // ホームページ
 Route::get('/', [ItemController::class, 'index'])->name('home');
 
@@ -48,3 +53,16 @@ Route::post('/purchase/payment/{item_id}', [PurchaseController::class, 'processP
 Route::post('/purchase/charge', [PurchaseController::class, 'charge']);
 Route::post('/purchase/save', [PurchaseController::class, 'savePurchaseData']);
 Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
+
+
+Route::get('/admin/register', [AdminRegisterController::class, 'showRegistrationForm'])->name('admin.register');
+Route::post('/admin/register', [AdminRegisterController::class, 'register']);
+
+Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminLoginController::class, 'login']);
+
+Route::middleware(['auth', 'admin'])->group(function () {
+  Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+  Route::delete('/admin/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
+  Route::delete('/admin/comments/{comment}', [AdminController::class, 'destroyComment'])->name('admin.comments.destroy');
+});
