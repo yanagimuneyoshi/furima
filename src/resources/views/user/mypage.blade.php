@@ -35,7 +35,11 @@
 <body>
   <header>
     <div class="logo">COACHTECH</div>
-    <input type="text" placeholder="なにをお探しですか？" class="search-bar">
+    <form action="{{ route('mypage') }}" method="GET" class="search-form">
+      <input type="text" name="query" placeholder="なにをお探しですか？" class="search-bar" value="{{ request('query') }}">
+    </form>
+
+    <!-- <input type="text" placeholder="なにをお探しですか？" class="search-bar"> -->
     <div class="auth-buttons">
       <form method="POST" action="{{ route('logout') }}">
         @csrf

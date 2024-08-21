@@ -43,4 +43,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class, 'user_id', 'id');
     }
+
+    public function soldItems()
+    {
+        return $this->hasMany(Item::class, 'user_id')
+            ->whereHas('orders'); // 注文が存在する商品
+    }
+
+    /**
+     * ユーザーが購入した商品
+     */
+    public function purchasedItems()
+    {
+        return $this->hasManyThrough(Item::class, Order::class, 'user_id', 'id', 'id', 'item_id');
+    }
+
 }

@@ -3,24 +3,42 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
 
 class MypageController extends Controller
 {
-  public function index()
+  public function index(Request $request)
   {
-    // ログインしているユーザーのIDを取得
-    $userId = Auth::id();
+    $query = $request->input('query');
 
-    // ユーザーが出品した商品を取得
-    $soldItems = Item::where('user_id', $userId)->get();
+    // 出品した商品と購入した商品のクエリを取得
+    $soldItemsQuery = Auth::user()->soldItems();
+    $purchasedItemsQuery = Auth::user()->purchasedItems();
 
-    // ユーザーが購入した商品を取得（ここでは `purchases` テーブルが存在し、`Item` モデルとリレーションがあることを前提）
-    $purchasedItems = Item::whereHas('orders', function ($query) use ($userId) {
-      $query->where('user_id', $userId);
-    })->get();
+    // クエリが存在する場合、フィルタリング
+    if ($query) {
+      $soldItemsQuery->where(function ($q) use ($query) {
+        $q->where('title', 'LIKE', "%{$query}%")
+          ->orWhereHas('categories', function ($q) use ($query) {
+            $q->where('name', 'LIKE', "%{$query}%");
+          });
+      });
 
-    return view('user/mypage', compact('soldItems', 'purchasedItems'));
+      $purchasedItemsQuery->where(function ($q) use ($query) {
+        $q->where('title', 'LIKE', "%{$query}%")
+          ->orWhereHas('categories', function ($q) use ($query) {
+            $q->where('name', 'LIKE', "%{$query}%");
+          });
+      });
+    }
+
+    // 検索結果を取得
+    $soldItems = $soldItemsQuery->get();
+    $purchasedItems = $purchasedItemsQuery->get();
+
+    return view('user/mypage', [
+      'soldItems' => $soldItems,
+      'purchasedItems' => $purchasedItems,
+    ]);
   }
 }
