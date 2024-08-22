@@ -28,10 +28,15 @@
         <td>{{ $user->name }}</td>
         <td>{{ $user->email }}</td>
         <td>
-          <form action="{{ route('admin.users.destroy', $user) }}" method="POST">
+          <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display:inline;">
             @csrf
             @method('DELETE')
             <button type="submit">削除</button>
+          </form>
+          <form action="{{ route('admin.mailForm') }}" method="GET" style="display:inline;">
+            @csrf
+            <input type="hidden" name="email" value="{{ $user->email }}">
+            <button type="submit">お客様にメール</button>
           </form>
         </td>
       </tr>

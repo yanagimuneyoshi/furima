@@ -13,7 +13,7 @@ use App\Http\Controllers\MypageController;
 use App\Http\Controllers\AdminRegisterController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AdminController;
-
+use App\Http\Controllers\AdminMailController;
 
 // ホームページ
 Route::get('/', [ItemController::class, 'index'])->name('home');
@@ -65,4 +65,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
   Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
   Route::delete('/admin/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
   Route::delete('/admin/comments/{comment}', [AdminController::class, 'destroyComment'])->name('admin.comments.destroy');
+  Route::get('/admin/mail', [AdminMailController::class, 'showMailForm'])->name('admin.mailForm');
+  Route::post('/admin/send-mail', [AdminMailController::class, 'sendMail'])->name('admin.sendMail');
 });
+
+
