@@ -24,22 +24,24 @@ header {
 
 .auth-buttons {
   display: flex;
-  gap: 10px;
+  align-items: center;
 }
 
-.auth-buttons a,
-.auth-buttons button {
-  background-color: #fff;
-  color: #000;
-  border: none;
+.auth-buttons button,
+.auth-buttons a {
+  margin-left: 10px;
   padding: auto;
-  text-decoration: none;
+  background-color: #040404;
+  color: #ffffff;
+  border: 1px solid #000;
   cursor: pointer;
+  text-decoration: none;
 }
 
-.auth-buttons button {
+.auth-buttons .sell {
+  padding: 5px;
   background-color: #ffffff;
-  color: #050404;
+  color: #000000;
 }
 
 main {

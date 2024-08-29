@@ -24,22 +24,25 @@ header {
 
 .auth-buttons {
   display: flex;
-  gap: 10px;
+  align-items: center;
 }
 
-.auth-buttons a,
-.auth-buttons form {
-  display: inline-block;
-  margin: 0;
-}
-
-.auth-buttons form button {
-  background: none;
-  border: none;
-  color: #fff;
+.auth-buttons button,
+.auth-buttons a {
+  margin-left: 10px;
+  padding: auto;
+  background-color: #040404;
+  color: #ffffff;
+  border: 1px solid #000;
   cursor: pointer;
+  text-decoration: none;
 }
 
+.auth-buttons .sell {
+  padding: 5px;
+  background-color: #ffffff;
+  color: #000000;
+}
 .address-edit-container {
   max-width: 600px;
   margin: 40px auto;

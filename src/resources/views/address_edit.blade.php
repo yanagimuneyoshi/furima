@@ -10,8 +10,10 @@
 
 <body>
   <header>
-    <div class="logo">COACHTECH</div>
-    <input type="text" placeholder="なにをお探しですか？" class="search-bar">
+    <a href="/" class="logo">
+      <img src="{{ asset('images/logo.svg') }}" alt="COACHTECHロゴ" />
+    </a>
+
     <div class="auth-buttons">
       @if (Auth::check())
       <form method="POST" action="{{ route('logout') }}">

@@ -22,28 +22,15 @@
     }
   </script>
 
-  <style>
-    .tab.active {
-      background-color: #ccc;
-    }
 
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    .no-results {
-      display: none;
-    }
-  </style>
 </head>
 
 <body>
   <header>
-    <div class="logo">COACHTECH</div>
+    <a href="/" class="logo">
+      <img src="{{ asset('images/logo.svg') }}" alt="COACHTECHロゴ" />
+    </a>
+
     <form action="{{ route('item.search') }}" method="GET" class="search-form" id="search-form">
       <input type="text" name="query" placeholder="なにをお探しですか？" class="search-bar" id="search-bar">
       <input type="hidden" name="tab" id="tab" value="{{ request('tab', 'recommendations') }}">

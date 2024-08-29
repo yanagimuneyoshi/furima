@@ -10,10 +10,12 @@
 
 <body>
   <header>
-    <div class="logo">COACHTECH</div>
-    <input type="text" placeholder="なにをお探しですか？" class="search-bar">
+    <a href="/" class="logo">
+      <img src="{{ asset('images/logo.svg') }}" alt="COACHTECHロゴ" />
+    </a>
+
     <div class="auth-buttons">
-      <form method="POST" action="{{ route('logout') }}">
+      <form method="POST" action="{{ route('logout') }}" class="page">
         @csrf
         <button type="submit" class="logout">ログアウト</button>
       </form>

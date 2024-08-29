@@ -10,7 +10,9 @@
 
 <body>
   <header>
-    <div class="logo">COACHTECH</div>
+    <a href="/" class="logo">
+      <img src="{{ asset('images/logo.svg') }}" alt="COACHTECHロゴ" />
+    </a>
   </header>
   <main>
     <h1>会員登録</h1>

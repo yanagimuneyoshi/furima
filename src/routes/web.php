@@ -27,11 +27,12 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // 認証が必要なルート
 Route::middleware(['auth'])->group(function () {
-  Route::get('/mypage', [UserController::class, 'index'])->name('mypage');
+  Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
   Route::get('/mypage/edit', [UserController::class, 'edit'])->name('profile.edit');
   Route::post('/mypage/edit', [UserController::class, 'update'])->name('profile.update');
   Route::get('/sell', [ItemController::class, 'create'])->name('sell');
   Route::post('/sell', [ItemController::class, 'store'])->name('items.store');
+
   Route::get('/purchase/{item_id}', [PurchaseController::class, 'show'])->name('purchase');
   Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.address');
   Route::post('/purchase/address/{item_id}', [PurchaseController::class, 'updateAddress'])->name('address.update');
@@ -52,9 +53,8 @@ Route::post('/buy/{id}', [PurchaseController::class, 'buy'])->name('buy');
 Route::post('/purchase/payment/{item_id}', [PurchaseController::class, 'processPayment'])->name('stripe.payment');
 Route::post('/purchase/charge', [PurchaseController::class, 'charge']);
 Route::post('/purchase/save', [PurchaseController::class, 'savePurchaseData']);
-Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
 
-
+// 管理者登録・ログイン・管理機能
 Route::get('/admin/register', [AdminRegisterController::class, 'showRegistrationForm'])->name('admin.register');
 Route::post('/admin/register', [AdminRegisterController::class, 'register']);
 
@@ -68,5 +68,3 @@ Route::middleware(['auth', 'admin'])->group(function () {
   Route::get('/admin/mail', [AdminMailController::class, 'showMailForm'])->name('admin.mailForm');
   Route::post('/admin/send-mail', [AdminMailController::class, 'sendMail'])->name('admin.sendMail');
 });
-
-

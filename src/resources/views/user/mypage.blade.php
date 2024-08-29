@@ -34,12 +34,13 @@
 
 <body>
   <header>
-    <div class="logo">COACHTECH</div>
+    <a href="/" class="logo">
+      <img src="{{ asset('images/logo.svg') }}" />
+    </a>
     <form action="{{ route('mypage') }}" method="GET" class="search-form">
       <input type="text" name="query" placeholder="なにをお探しですか？" class="search-bar" value="{{ request('query') }}">
     </form>
 
-    <!-- <input type="text" placeholder="なにをお探しですか？" class="search-bar"> -->
     <div class="auth-buttons">
       <form method="POST" action="{{ route('logout') }}">
         @csrf
@@ -53,9 +54,9 @@
     <div class="profile-section">
       <div class="profile-pic">
         @if (Auth::user()->profile_pic)
-        <img src="{{ asset('storage/' . Auth::user()->profile_pic) }}" alt="Profile Picture">
+        <img src="{{ asset('storage/' . Auth::user()->profile_pic) }}">
         @else
-        <img src="{{ asset('images/default-profile.png') }}" alt="Default Profile Picture">
+        <img src="{{ asset('images/default-profile.png') }}">
         @endif
       </div>
       <div class="profile-info">

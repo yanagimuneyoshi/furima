@@ -1,3 +1,6 @@
+
+
+/* 全体のスタイル設定 */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -12,6 +15,8 @@ header {
   background-color: #000;
   color: #fff;
   padding: 10px 20px;
+  flex-wrap: wrap;
+  /* レスポンシブ対応でラップを許可 */
 }
 
 .logo {
@@ -19,34 +24,38 @@ header {
   font-weight: bold;
 }
 
-.search-bar {
-  width: 300px;
-  padding: 5px;
+img {
+  width: 90%;
+}
+
+.search-form {
+  flex-grow: 1;
+}
+input {
+  width: 100%;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
 }
 
 .auth-buttons button,
 .auth-buttons a {
-  margin-left: 10px;
-  padding: auto;
   background-color: #080808;
   color: #f8f8f8;
   border: 1px solid #000;
   cursor: pointer;
   text-decoration: none;
+
+  text-align: center;
   display: inline-block;
 }
 
 .auth-buttons .sell {
-
-  margin-left: 10px;
-  padding: 5px 10px;
   background-color: #fff;
   color: #050505;
   border: 1px solid #000;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-
 }
 
 .auth-buttons form {
@@ -77,28 +86,13 @@ main {
 }
 
 .items {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.item {
-  width: 100%;
-  padding-bottom: 5%;
-  background-color: #ccc;
-}
-
-.items {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  /* アイテム間のスペースを調整 */
 }
 
 .item {
   width: 160px;
-  /* 各アイテムの幅を設定 */
   border: 1px solid #ccc;
   border-radius: 8px;
   overflow: hidden;
@@ -107,62 +101,76 @@ main {
 
 .item img {
   width: 100%;
-  /* 画像をアイテムの幅に合わせて表示 */
   height: auto;
-  /* 高さを自動調整 */
   display: block;
 }
 
 .item-details {
   padding: 10px;
-  /* 詳細部分の内側余白を調整 */
 }
 
 .item-details p {
   margin: 5px 0;
-  /* 各詳細行の間隔を調整 */
 }
 
-/* resources/css/item.css */
-.search-form {
-  display: flex;
-  align-items: center;
-  margin: 10px 0;
+.tab.active {
+  background-color: #ccc;
 }
 
-.search-bar {
-  flex-grow: 1;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.tab-content {
+  display: none;
 }
 
-.items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+.tab-content.active {
+  display: block;
 }
 
-.item {
-  width: calc(25% - 20px);
-  background-color: #f8f8f8;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.no-results {
+  display: none;
 }
 
-.item img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-}
+/* スマートフォン用のレスポンシブデザイン */
+@media (max-width: 760px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-.item-details {
-  margin-top: 10px;
-}
+  .search-form {
+    width: 100%;
+    margin-top: 10px;
+  }
 
-.item-details p {
-  margin: 0 0 5px;
-  font-size: 14px;
-  color: #555;
+  .auth-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .auth-buttons a,
+  .auth-buttons button {
+    width: 30%;
+    /* 各ボタンの幅を調整して横一列にする */
+    margin-left: 0;
+  }
+
+  .tabs {
+    flex-direction: column;
+  }
+
+  .tab {
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .items {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .item {
+    width: 90%;
+    max-width: 300px;
+  }
 }

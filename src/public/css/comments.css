@@ -29,19 +29,26 @@ header {
   align-items: center;
 }
 
+.auth-buttons {
+  display: flex;
+  align-items: center;
+}
+
 .auth-buttons button,
 .auth-buttons a {
   margin-left: 10px;
-  background-color: #fff;
-  color: #000;
+  padding: auto;
+  background-color: #040404;
+  color: #ffffff;
   border: 1px solid #000;
   cursor: pointer;
   text-decoration: none;
 }
 
 .auth-buttons .sell {
-  background-color: #000;
-  color: #fff;
+  padding: 5px;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 main {

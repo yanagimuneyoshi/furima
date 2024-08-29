@@ -7,9 +7,17 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    // public function index()
+    // {
+    //     $user = Auth::user();
+    //     return view('user.mypage', compact('user'));
+    // }
     public function index()
     {
         $user = Auth::user();
+        if ($user === null) {
+            \Log::info('Auth::user() returned null in UserController@index.');
+        }
         return view('user.mypage', compact('user'));
     }
 

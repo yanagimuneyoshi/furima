@@ -46,8 +46,8 @@ class User extends Authenticatable
 
     public function soldItems()
     {
-        return $this->hasMany(Item::class, 'user_id')
-            ->whereHas('orders'); // 注文が存在する商品
+        return $this->hasMany(Item::class, 'user_id');
+         // 注文が存在する商品
     }
 
     /**
@@ -55,7 +55,8 @@ class User extends Authenticatable
      */
     public function purchasedItems()
     {
-        return $this->hasManyThrough(Item::class, Order::class, 'user_id', 'id', 'id', 'item_id');
+        // return $this->hasManyThrough(Item::class, Order::class, 'user_id', 'id', 'id', 'item_id');
+        return $this->belongsToMany(Item::class, 'orders', 'user_id', 'item_id');
     }
 
     public function isAdmin()
