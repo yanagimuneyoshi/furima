@@ -15,28 +15,47 @@ class LoginController extends Controller
 
   public function authenticate(Request $request)
   {
-    $credentials = $request->validate([
-      'email' => 'required|email',
-      'password' => 'required',
-    ]);
+  
+      $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+      ]);
 
-    if (Auth::attempt($credentials)) {
-      $request->session()->regenerate();
-      return redirect()->intended('/');
+      // \Log::info('Login attempt with credentials:', $credentials);
+
+      if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+        // \Log::info('Authenticated user:', [Auth::user()]);
+        return redirect()->intended('/');
+      }
+
+      throw ValidationException::withMessages([
+        'email' => __('auth.failed'),
+      ]);
+    // } catch (ValidationException $e) {
+    //   \Log::error('Validation error:', $e->errors());
+    //   return response()->json(['error' => 'Validation failed'], 422);
+    // } catch (\Exception $e) {
+    //   \Log::error('Authentication error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
+    //   return response()->json(['error' => 'Authentication failed'], 500);
+    // }
     }
+  
 
-    throw ValidationException::withMessages([
-      'email' => __('auth.failed'),
-    ]);
-  }
 
-  public function logout(Request $request)
+
+
+public function logout(Request $request)
   {
-    Auth::logout();
-
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
-    return redirect('/')->with('status', 'Logged out successfully!');
+    try {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        \Log::info('User logged out, session cleared:', [session()->all()]);
+        return redirect('/')->with('status', 'Logged out successfully!');
+    } catch (\Exception $e) {
+        \Log::error('Logout error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
+        return response()->json(['error' => 'Logout failed'], 500);
+    }
   }
 }

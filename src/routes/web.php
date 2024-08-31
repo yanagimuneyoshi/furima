@@ -25,6 +25,8 @@ Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::get('/mylist/check', [ItemController::class, 'checkAuth'])->name('mylist.check');
+
 // 認証が必要なルート
 Route::middleware(['auth'])->group(function () {
   Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
@@ -32,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
   Route::post('/mypage/edit', [UserController::class, 'update'])->name('profile.update');
   Route::get('/sell', [ItemController::class, 'create'])->name('sell');
   Route::post('/sell', [ItemController::class, 'store'])->name('items.store');
+  // Route::get('/mylist/check', [ItemController::class, 'checkAuth'])->name('mylist.check');
 
   Route::get('/purchase/{item_id}', [PurchaseController::class, 'show'])->name('purchase');
   Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.address');

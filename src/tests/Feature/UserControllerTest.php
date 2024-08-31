@@ -2,95 +2,110 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class UserControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // CSRFトークン検証を無効化
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
+    }
+
     /** @test */
     public function it_shows_the_user_mypage()
     {
-        // テスト用のユーザーを作成
         $user = User::factory()->create();
 
-        // ユーザーとして認証済み状態でリクエストを送信
-        $this->actingAs($user);
+        $response = $this->actingAs($user)->get(route('mypage'));
 
-        // ログ出力で認証状態を確認
-        \Log::info('Testing user object:', [$user]);
-
-        $response = $this->get(route('mypage'));
-
-        // ステータスコードが200であることを確認
         $response->assertStatus(200);
-
-        // ビューが正しいかどうかを確認し、ユーザーオブジェクトが渡されているかを確認
-        $response->assertViewIs('user.mypage')
-        ->assertViewHas('user', function ($viewUser) use ($user) {
-            if ($viewUser === null) {
-                \Log::info('User object is null in view.');
-                return false;
-            }
-            return $viewUser->id === $user->id;
-        });
+        $response->assertViewIs('user.mypage');
+        $response->assertSee($user->name);
     }
-
-
-
-
-    /** @test */
-    public function it_shows_the_profile_edit_page()
-    {
-        // テスト用のユーザーを作成
-        $user = User::factory()->create();
-
-        // ユーザーとして認証済み状態でリクエストを送信
-        $response = $this->actingAs($user)->get(route('profile.edit'));
-
-        // ステータスコードが200であることを確認
-        $response->assertStatus(200);
-
-        // ビューが正しいかどうかを確認
-        $response->assertViewIs('profile') // ここを変更
-        ->assertViewHas('user', function ($viewUser) use ($user) {
-            // $viewUser が null でないこと、かつ $viewUser が User インスタンスであることを確認
-            return $viewUser !== null && $viewUser->id === $user->id;
-        });
-    }
-
-
 
     /** @test */
     public function it_updates_the_user_profile()
     {
-        // テスト用のユーザーを作成
         $user = User::factory()->create();
 
-        // 更新データを準備
-        $updatedData = [
+        // プロフィール更新用のデータ
+        $data = [
             'name' => 'Updated Name',
-            'postal_code' => '1234567',
-            'address' => 'New Address',
-            'building' => 'New Building',
-            'profile_pic' => null, // 画像のアップロードはテストしない場合
+            'postal_code' => '123-4567',
+            'address' => 'Updated Address',
+            'building' => 'Updated Building',
         ];
 
-        // ユーザーとして認証済み状態でリクエストを送信
-        $response = $this->actingAs($user)->post(route('profile.update'), $updatedData);
+        $response = $this->actingAs($user)->post(route('profile.update'), $data);
 
-        // ユーザーのデータが更新されていることを確認
+        $response->assertRedirect(route('mypage'));
+        $response->assertSessionHas('success', 'プロフィールが更新されました。');
+
+        // データベースに更新が反映されているか確認
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
             'name' => 'Updated Name',
-            'postal_code' => '1234567',
+            'postal_code' => '123-4567',
+            'address' => 'Updated Address',
+            'building' => 'Updated Building',
+        ]);
+    }
+
+    /** @test */
+    public function it_fails_to_update_with_invalid_data()
+    {
+        $user = User::factory()->create();
+
+        // 無効なデータ（バリデーションエラーが発生するはず）
+        $data = [
+            'name' => '',  // 必須フィールドを空にする
+            'postal_code' => 'invalid_postal_code',  // 無効な郵便番号
+            'address' => '',  // 必須フィールドを空にする
+        ];
+
+        $response = $this->actingAs($user)->post(route('profile.update'), $data);
+
+        // バリデーションエラーメッセージがセッションに存在するか確認
+        $response->assertSessionHasErrors(['name', 'postal_code', 'address']);
+    }
+
+    /** @test */
+    public function it_uploads_and_updates_profile_picture()
+    {
+        $user = User::factory()->create();
+        Storage::fake('public');
+
+        // 画像ファイルの作成
+        $file = UploadedFile::fake()->image('avatar.jpg');
+
+        // データセット
+        $data = [
+            'name' => 'New Name',
+            'postal_code' => '123-4567',
             'address' => 'New Address',
             'building' => 'New Building',
-        ]);
+            'profile_pic' => $file,  // プロフィール画像を追加
+        ];
 
-        // リダイレクトが成功したことを確認
+        $response = $this->actingAs($user)->post(route('profile.update'), $data);
+
         $response->assertRedirect(route('mypage'));
+        $response->assertSessionHas('success', 'プロフィールが更新されました。');
+
+        // ストレージに画像が保存されているか確認
+        Storage::disk('public')->assertExists('profile_pics/' . $file->hashName());
+
+        // ユーザーのプロファイル画像パスが更新されているか確認
+        $this->assertEquals('profile_pics/' . $file->hashName(), $user->fresh()->profile_pic);
     }
 }

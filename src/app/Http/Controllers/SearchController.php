@@ -13,7 +13,11 @@ class SearchController extends Controller
     $query = $request->input('query');
     $tab = $request->input('tab', 'recommendations');
 
-    if ($tab === 'mylist' && Auth::check()) {
+    if ($tab === 'mylist') {
+      if (!Auth::check()) {
+        return redirect()->route('login'); // 認証されていない場合はログインページにリダイレクト
+      }
+
       $favorites = Auth::user()->favorites()
         ->where('title', 'LIKE', "%{$query}%")
         ->orWhereHas('categories', function ($q) use ($query) {
@@ -33,4 +37,5 @@ class SearchController extends Controller
       return view('item', ['items' => $items, 'favorites' => collect(), 'activeTab' => $tab]);
     }
   }
+
 }

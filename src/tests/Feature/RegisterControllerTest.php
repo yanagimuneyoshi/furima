@@ -2,53 +2,63 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\URL;
 
 class RegisterControllerTest extends TestCase
 {
-  use RefreshDatabase;
+    use RefreshDatabase;
 
-  /** @test */
-  public function it_displays_the_registration_form()
-  {
-    $response = $this->get(route('register'));
+    protected function setUp(): void
+    {
+        parent::setUp();
+        
+        // CSRFトークン検証を無効化
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
+    }
 
-    $response->assertStatus(200)
-      ->assertViewIs('auth.register');
-  }
+    /** @test */
+    public function it_displays_the_register_view()
+    {
+        $response = $this->get('/register');
 
-  /** @test */
-  public function it_registers_a_new_user()
-  {
-    $response = $this->post(route('register'), [
-      'email' => 'testuser@example.com',
-      'password' => 'password123',
-      'password_confirmation' => 'password123',
-    ]);
+        $response->assertStatus(200);
+        $response->assertViewIs('auth.register'); // ビューが正しく表示されるかを確認
+    }
 
-    $response->assertRedirect('/login')
-      ->assertSessionHas('success', '会員登録が完了しました');
+    /** @test */
+    public function it_registers_a_user_and_redirects_to_login()
+    {
+        $response = $this->post('/register', [
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
 
-    $this->assertDatabaseHas('users', [
-      'email' => 'testuser@example.com',
-    ]);
+        $response->assertRedirect('/login');
+        $response->assertSessionHas('success', '会員登録が完了しました');
 
-    $user = User::where('email', 'testuser@example.com')->first();
-    $this->assertTrue(Hash::check('password123', $user->password));
-  }
+        $this->assertDatabaseHas('users', [
+            'email' => 'test@example.com',
+        ]);
 
-  /** @test */
-  public function it_fails_registration_with_invalid_data()
-  {
-    $response = $this->post(route('register'), [
-      'email' => 'invalid-email',
-      'password' => 'short',
-      'password_confirmation' => 'notmatching',
-    ]);
+        $user = User::where('email', 'test@example.com')->first();
+        $this->assertTrue(Hash::check('password123', $user->password));
+    }
 
-    $response->assertSessionHasErrors(['email', 'password']);
-  }
+    /** @test */
+    public function it_fails_registration_with_invalid_data()
+    {
+        $response = $this->from('/register')->post('/register', [
+            'email' => 'invalid-email',
+            'password' => 'pass', // パスワードが短すぎる
+        ]);
+
+        $response->assertRedirect('/register');
+        $response->assertSessionHasErrors(['email', 'password']); // バリデーションエラーの確認
+    }
 }

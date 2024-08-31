@@ -19,7 +19,7 @@ class CommentController extends Controller
 
   public function store(Request $request, $item_id)
   {
-  
+
     $request->validate([
       'content' => 'required|string|max:255',
     ]);

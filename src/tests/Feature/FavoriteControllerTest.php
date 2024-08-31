@@ -2,55 +2,88 @@
 
 namespace Tests\Feature;
 
-use App\Models\Item;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\Item;
 
 class FavoriteControllerTest extends TestCase
 {
   use RefreshDatabase;
 
-  /** @test */
-  public function it_toggles_favorite_status_for_logged_in_user()
+  /**
+   * テストの前に必要な設定を行うメソッド
+   */
+  protected function setUp(): void
+  {
+    parent::setUp();
+
+    // CSRFトークン検証を無効化
+    $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
+  }
+
+  /**
+   * 認証済みのユーザーが商品の「お気に入り」ステータスをトグルできることをテスト
+   *
+   * @return void
+   */
+  public function test_a_user_can_toggle_favorite_status()
   {
     // テスト用のユーザーとアイテムを作成
     $user = User::factory()->create();
     $item = Item::factory()->create();
 
-    // ユーザーをログイン状態に設定
+    // ユーザーを認証
     $this->actingAs($user);
 
-    // アイテムをお気に入りに追加するリクエストを送信
-    $response = $this->post(route('favorites.toggle', $item->id));
+    // お気に入り追加のリクエストを送信
+    $response = $this->postJson(route('favorites.toggle', $item->id));
 
-    // リクエストが成功したことを確認
-    $response->assertStatus(200);
-    $response->assertJson(['success' => true, 'is_favorited' => true]);
+    // レスポンスの検証
+    $response->assertStatus(200)
+      ->assertJson([
+        'success' => true,
+        'is_favorited' => true,
+      ]);
 
-    // お気に入りに追加されたことを確認
-    $this->assertTrue($user->favorites()->where('item_id', $item->id)->exists());
+    // お気に入りの状態を確認
+    $this->assertDatabaseHas('favorites', [
+      'user_id' => $user->id,
+      'item_id' => $item->id,
+    ]);
 
-    // 同じリクエストを送信して、お気に入りが削除されることを確認
-    $response = $this->post(route('favorites.toggle', $item->id));
-    $response->assertStatus(200);
-    $response->assertJson(['success' => true, 'is_favorited' => false]);
+    // 再度お気に入り削除のリクエストを送信
+    $response = $this->postJson(route('favorites.toggle', $item->id));
 
-    // お気に入りから削除されたことを確認
-    $this->assertFalse($user->favorites()->where('item_id', $item->id)->exists());
+    // レスポンスの検証
+    $response->assertStatus(200)
+      ->assertJson([
+        'success' => true,
+        'is_favorited' => false,
+      ]);
+
+    // お気に入りの状態を確認
+    $this->assertDatabaseMissing('favorites', [
+      'user_id' => $user->id,
+      'item_id' => $item->id,
+    ]);
   }
 
-  /** @test */
-  public function it_returns_error_when_user_is_not_logged_in()
+  /**
+   * 未認証のユーザーがお気に入りをトグルできないことをテスト
+   *
+   * @return void
+   */
+  public function test_a_guest_cannot_toggle_favorite_status()
   {
     // テスト用のアイテムを作成
     $item = Item::factory()->create();
 
-    // 認証されていない状態でリクエストを送信
-    $response = $this->post(route('favorites.toggle', $item->id));
+    // お気に入りトグルのリクエストを未認証で送信
+    $response = $this->postJson(route('favorites.toggle', $item->id));
 
-    // リクエストが失敗したことを確認
-    $response->assertStatus(200);
-    $response->assertJson(['success' => false]);
+    // レスポンスの検証
+    $response->assertStatus(200)
+      ->assertJson(['success' => false]);
   }
 }

@@ -8,37 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
+use Illuminate\Http\JsonResponse;
+
 class ItemController extends Controller
 {
-    // public function index(Request $request)
-    // {
-    //     // すべての商品をカテゴリ情報とともに取得
-    //     $items = Item::with('categories')->get()->unique('id');
-
-    //     // ログインしている場合、ログインしているユーザーのお気に入りを取得
-    //     if (auth()->check()) {
-    //         $userId = auth()->id(); // ログインしているユーザーのIDを取得
-
-    //         // 現在のユーザーのお気に入りアイテムのみを取得
-    //         $favorites = Item::whereHas('favorites', function ($query) use ($userId) {
-    //             $query->where('user_id', $userId);
-    //         })
-    //             ->with('categories')
-    //             ->get()
-    //             ->unique('id');
-
-    //         // $favoritesの内容をログに記録
-    //         Log::info('User favorites:', ['favorites' => $favorites]);
-    //     } else {
-    //         $favorites = collect(); // ログインしていない場合、空のコレクション
-    //     }
-
-    //     // リクエストの内容をログに記録
-    //     Log::info('Request query:', $request->all());
-
-    //     // itemsとfavoritesをBladeテンプレートに渡す
-    //     return view('item', compact('items', 'favorites'));
-    // }
     public function index(Request $request)
     {
         $query = $request->input('query');
@@ -53,6 +26,11 @@ class ItemController extends Controller
 
         $items = $itemsQuery->get()->unique('id');
 
+        // 未認証ユーザーが「mylist」タブを選択した場合はリダイレクト
+        if ($tab === 'mylist' && !auth()->check()) {
+            return redirect()->route('login');
+        }
+
         // ログインしている場合、ログインしているユーザーのお気に入りを取得
         if (auth()->check()) {
             $favoritesQuery = auth()->user()->favorites()->with('categories');
@@ -66,12 +44,16 @@ class ItemController extends Controller
             $favorites = collect(); // ログインしていない場合、空のコレクション
         }
 
-        // デバッグ情報をログに記録
-        // \Log::info('Request query: ', $request->all());
-        // \Log::info('User favorites: ', ['favorites' => $favorites]);
-
-        // itemsとfavoritesをBladeテンプレートに渡す
         return view('item', compact('items', 'favorites'));
+    }
+
+    public function checkAuth(): JsonResponse
+    {
+        if (Auth::check()) {
+            return response()->json(['authenticated' => true]);
+        } else {
+            return response()->json(['authenticated' => false]);
+        }
     }
 
 

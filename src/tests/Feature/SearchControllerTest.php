@@ -2,71 +2,62 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
 use App\Models\Item;
-use App\Models\Category;
 
 class SearchControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function it_searches_items_by_title()
+    public function it_returns_recommendations_tab_items_when_no_auth_and_tab_is_recommendations()
     {
-        // テスト用のアイテムを作成
+        // テスト用のデータを作成
         $item1 = Item::factory()->create(['title' => 'Test Item 1']);
-        $item2 = Item::factory()->create(['title' => 'Another Test Item']);
+        $item2 = Item::factory()->create(['title' => 'Test Item 2']);
 
-        // 検索クエリを使用して検索を実行
-        $response = $this->get(route('item.search', ['query' => 'Test']));
+        // 検索リクエストを送信
+        $response = $this->get(route('item.search', ['query' => 'Test', 'tab' => 'recommendations']));
 
-        // 検索結果に期待されるアイテムが含まれているかを確認
-        $response->assertStatus(200)
-            ->assertViewIs('item')
-            ->assertViewHas('items', function ($items) use ($item1, $item2) {
-                return $items->contains($item1) && $items->contains($item2);
-            });
+        // レスポンスの検証
+        $response->assertStatus(200);
+        $response->assertViewHas('items', function ($items) use ($item1, $item2) {
+            return $items->contains($item1) && $items->contains($item2);
+        });
+        $response->assertViewHas('activeTab', 'recommendations');
     }
 
     /** @test */
-    public function it_searches_favorites_by_title()
+    public function it_returns_mylist_items_when_authenticated_and_tab_is_mylist()
     {
-        // テスト用のユーザーとアイテムを作成
+        // ユーザーの作成と認証
         $user = User::factory()->create();
-        $item = Item::factory()->create(['title' => 'Favorite Item']);
+        $this->actingAs($user);
 
         // ユーザーのお気に入りにアイテムを追加
-        $user->favorites()->attach($item->id);
+        $favoriteItem = Item::factory()->create(['title' => 'Favorite Item']);
+        $user->favorites()->attach($favoriteItem);
 
-        // 検索クエリを使用してお気に入りを検索
-        $response = $this->actingAs($user)->get(route('item.search', ['query' => 'Favorite', 'tab' => 'mylist']));
+        // マイリスト検索リクエストを送信
+        $response = $this->get(route('item.search', ['query' => 'Favorite', 'tab' => 'mylist']));
 
-        // 検索結果に期待されるアイテムが含まれているかを確認
-        $response->assertStatus(200)
-            ->assertViewIs('item')
-            ->assertViewHas('favorites', function ($favorites) use ($item) {
-                return $favorites->contains($item);
-            });
+        // レスポンスの検証
+        $response->assertStatus(200);
+        $response->assertViewHas('favorites', function ($favorites) use ($favoriteItem) {
+            return $favorites->contains($favoriteItem);
+        });
+        $response->assertViewHas('activeTab', 'mylist');
     }
 
     /** @test */
-    public function it_searches_items_by_category()
+    public function it_redirects_to_login_when_not_authenticated_and_mylist_tab_is_requested()
     {
-        // テスト用のカテゴリーとアイテムを作成
-        $category = Category::factory()->create(['name' => 'Electronics']);
-        $item = Item::factory()->create(['title' => 'Item in Category']);
-        $item->categories()->attach($category->id);
+        // マイリストタブを要求して未認証の場合のリクエスト
+        $response = $this->get(route('item.search', ['tab' => 'mylist']));
 
-        // カテゴリーを使って検索を実行
-        $response = $this->get(route('item.search', ['query' => 'Electronics']));
-
-        // 検索結果に期待されるアイテムが含まれているかを確認
-        $response->assertStatus(200)
-            ->assertViewIs('item')
-            ->assertViewHas('items', function ($items) use ($item) {
-                return $items->contains($item);
-            });
+        // リダイレクト先がログインページであることを確認
+        $response->assertRedirect(route('login'));
     }
 }

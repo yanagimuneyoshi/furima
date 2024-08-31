@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>COACHTECHフリマ</title>
   <link rel="stylesheet" href="{{ asset('css/item.css') }}">
+
+  <!-- jQueryライブラリを先に読み込む -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script>
     function switchTab(tabName) {
       // タブのリロード
@@ -14,15 +18,25 @@
     }
 
     function handleMyListClick() {
-      @if(Auth::check())
-      switchTab('mylist'); // マイリストタブをクリックするとリロードされる
-      @else
-      window.location.href = "{{ route('login') }}";
-      @endif
+  $.ajax({
+    url: "{{ route('mylist.check') }}",  // コントローラーにリクエストを送るURL
+    type: 'GET',
+    success: function(response) {
+      if (response.authenticated) {
+        switchTab('mylist'); // 認証されていればマイリストタブに切り替える
+      } else {
+        window.location.href = "{{ route('login') }}"; // 認証されていなければログインページにリダイレクト
+      }
+    },
+    error: function(xhr) {
+      if (xhr.status === 401) {  // 401エラーの場合の処理
+        window.location.href = "{{ route('login') }}";
+      }
     }
+  });
+}
+
   </script>
-
-
 </head>
 
 <body>
@@ -50,6 +64,7 @@
       <a href="{{ route('sell') }}" class="sell">出品</a>
     </div>
   </header>
+
   <main>
     <div class="tabs">
       <button class="tab {{ request('tab', 'recommendations') === 'recommendations' ? 'active' : '' }}" id="recommendations-tab" onclick="switchTab('recommendations')">おすすめ</button>
@@ -111,7 +126,6 @@
       </div>
     </div>
     @endif
-
   </main>
 </body>
 
