@@ -25,7 +25,7 @@ class AdminLoginController extends Controller
         //     'email' => 'メールアドレスとパスワードが一致していません。',
         //     'password' => 'メールアドレスとパスワードが一致していません。',
         // ])->withInput($request->only('email'));
-        return back()->with('error', 'メールアドレスとパスワードが一致していません。')->withInput($request->only('email'));
+        return redirect()->route('admin.login')->with('error', 'メールアドレスとパスワードが一致していません。')->withInput($request->only('email'));
     }
 
     protected function validator(array $data)

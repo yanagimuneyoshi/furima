@@ -13,6 +13,7 @@ class AdminMailController extends Controller
         return view('admin.mail_form');
     }
 
+    
     public function sendMail(Request $request)
     {
         $details = [
@@ -20,8 +21,11 @@ class AdminMailController extends Controller
             'body' => $request->input('body')
         ];
 
+
         Mail::to($request->input('email'))->send(new UserNotificationMail($details));
+
 
         return redirect()->back()->with('success', 'メールが送信されました');
     }
+
 }

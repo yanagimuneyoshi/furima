@@ -18,6 +18,14 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => bcrypt('password'), // 簡略化のため固定のパスワード
             'remember_token' => Str::random(10),
+            'role' => 'user', // デフォルトの役割を設定
         ];
+    }
+
+    public function admin()
+    {
+        return $this->state([
+            'role' => 'admin',
+        ]);
     }
 }

@@ -16,6 +16,7 @@ class UserNotificationMail extends Mailable
     /**
      * Create a new message instance.
      *
+     * @param array $details
      * @return void
      */
     public function __construct($details)
@@ -30,7 +31,12 @@ class UserNotificationMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('重要なお知らせ')
-            ->view('emails.user_notification');
+
+        \Log::info('UserNotificationMail buildメソッドが呼び出されました', $this->details); // デバッグ用ログ
+
+        return $this->subject($this->details['title'] ?? '重要なお知らせ')
+            ->view('emails.user_notification')
+            ->with('details', $this->details);
     }
 }
+
