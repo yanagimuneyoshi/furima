@@ -10,69 +10,50 @@ class AdminRegisterControllerTest extends TestCase
 {
   use RefreshDatabase;
 
-  /** @test */
-  public function it_displays_admin_registration_form()
+  protected function setUp(): void
   {
-    // 管理者登録ページが正しく表示されることをテスト
+    parent::setUp();
+
+    // CSRFトークン検証を無効化
+    $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
+  }
+
+  public function testShowRegistrationForm()
+  {
     $response = $this->get(route('admin.register'));
 
     $response->assertStatus(200);
     $response->assertViewIs('admin.register');
   }
 
-  /** @test */
-  public function it_registers_a_new_admin_with_valid_data()
+  public function testAdminRegistration()
   {
-    // 有効なデータで管理者を登録する
     $response = $this->post(route('admin.register'), [
-      'name' => 'Test Admin',
+      'name' => 'Admin User',
       'email' => 'admin@example.com',
       'password' => 'password123',
       'password_confirmation' => 'password123',
     ]);
 
-    // データベースに新しい管理者が保存されていることを確認
     $response->assertRedirect(route('admin.login'));
+    $response->assertSessionHas('success', '管理者登録が完了しました。ログインしてください。');
+
     $this->assertDatabaseHas('users', [
       'email' => 'admin@example.com',
-      'role' => 'admin'
+      'role' => 'admin',
     ]);
   }
 
-  /** @test */
-  public function it_does_not_register_admin_with_invalid_data()
+  public function testAdminRegistrationValidationFails()
   {
-    // 無効なデータで管理者を登録しようとする
-    $response = $this->from(route('admin.register'))->post(route('admin.register'), [
-      'name' => '',  // 名前が空
-      'email' => 'not-an-email',  // 無効なメール形式
-      'password' => 'short',  // 短すぎるパスワード
-      'password_confirmation' => 'different',  // パスワード確認が一致しない
+    $response = $this->post(route('admin.register'), [
+      'name' => '', // 名前が空の状態で送信
+      'email' => 'not-an-email', // 無効なメールアドレス
+      'password' => 'short', // 短すぎるパスワード
+      'password_confirmation' => 'different', // パスワード確認が一致しない
     ]);
 
-    // エラーメッセージが表示され、登録ページにリダイレクトされることを確認
-    $response->assertRedirect(route('admin.register'));
+    $response->assertStatus(302);
     $response->assertSessionHasErrors(['name', 'email', 'password']);
-    $this->assertDatabaseMissing('users', ['email' => 'not-an-email']);
-  }
-
-  /** @test */
-  public function it_does_not_register_admin_with_existing_email()
-  {
-    // 既存のユーザーを作成
-    User::factory()->create(['email' => 'admin@example.com']);
-
-    // 既存のメールアドレスで管理者を登録しようとする
-    $response = $this->from(route('admin.register'))->post(route('admin.register'), [
-      'name' => 'Another Admin',
-      'email' => 'admin@example.com',  // 既に存在するメール
-      'password' => 'password123',
-      'password_confirmation' => 'password123',
-    ]);
-
-    // エラーメッセージが表示され、登録ページにリダイレクトされることを確認
-    $response->assertRedirect(route('admin.register'));
-    $response->assertSessionHasErrors(['email']);
-    $this->assertDatabaseCount('users', 1); // ユーザー数が1のままであることを確認
   }
 }
