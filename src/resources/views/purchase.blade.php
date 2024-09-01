@@ -15,8 +15,6 @@
     <a href="/" class="logo">
       <img src="{{ asset('images/logo.svg') }}" alt="COACHTECHロゴ" />
     </a>
-
-
     <div class="auth-buttons">
       @if (Auth::check())
       <form method="POST" action="{{ route('logout') }}">
@@ -34,13 +32,6 @@
   <main>
     <div class="purchase-container">
       <div class="purchase-details">
-        <!-- <div class="item-info">
-          <img src="{{ asset('storage/' . $item->image_url) }}" alt="{{ $item->title }}">
-          <div>
-            <h2>{{ $item->title }}</h2>
-            <p>¥{{ number_format($item->price) }}</p>
-          </div>
-        </div> -->
         <div class="item-info" data-price="{{ $item->price }}">
           <img src="{{ asset('storage/' . $item->image_url) }}" alt="{{ $item->title }}">
           <div>
@@ -48,11 +39,10 @@
             <p>¥{{ number_format($item->price) }}</p>
           </div>
         </div>
-
         <div class="purchase-options">
           <div class="option">
             <span>支払い方法</span>
-            <a href="#" onclick="showPaymentOptions()">変更する</a>
+            <button type="button" onclick="togglePaymentOptions()">変更する</button>
             <select id="payment-method" style="display: none;" onchange="updatePaymentMethod()">
               <option value="コンビニ払い" selected>コンビニ払い</option>
               <option value="クレジットカード">クレジットカード</option>
@@ -80,8 +70,12 @@
             <td id="selected-payment-method">コンビニ払い</td>
           </tr>
         </table>
-        <div id="card-element" style="display: none;">
-          <!-- Stripe Elementsで作成されたカード要素が挿入されます -->
+        <div id="card-element-container" style="display: none;">
+          <div id="card-number-element"></div>
+          <div id="card-expiry-element"></div>
+          <div id="card-cvc-element"></div>
+          <!-- StripeのpostalCodeフィールドを削除し、HTMLのinputを使用 -->
+          <input type="text" id="postal-code" maxlength="8">
         </div>
         <button class="buy-button" id="submit-button">購入する</button>
       </div>
@@ -90,7 +84,7 @@
 
   <script>
     // 支払い方法の選択肢を表示/非表示にする関数
-    function showPaymentOptions() {
+    function togglePaymentOptions() {
       var paymentMethodSelect = document.getElementById('payment-method');
       if (paymentMethodSelect.style.display === 'none' || paymentMethodSelect.style.display === '') {
         paymentMethodSelect.style.display = 'inline-block';
@@ -99,49 +93,55 @@
       }
     }
 
-    // Stripeのセットアップ
-    var stripe = Stripe('pk_test_51PnN81KUcLKzkipSHyequBLJXlYm7A3z0RHhe0Ck76SEO6is0Bp9m2eqxJH8izrLNI3vqeYxFgnpu4c2AHoam92200FXru96oa');
-    var elements = stripe.elements();
-    var cardElement = elements.create('card');
-    var itemId = '{{ $item->id }}'; // BladeからJavaScriptにitem_idを渡す
-
     // 支払い方法の変更を処理する関数
     function updatePaymentMethod() {
       var paymentMethod = document.getElementById('payment-method').value;
       document.getElementById('selected-payment-method').innerText = paymentMethod;
 
       if (paymentMethod === 'クレジットカード') {
-        document.getElementById('card-element').style.display = 'block';
-        cardElement.mount('#card-element');
+        document.getElementById('card-element-container').style.display = 'block';
+        cardNumberElement.mount('#card-number-element');
+        cardExpiryElement.mount('#card-expiry-element');
+        cardCvcElement.mount('#card-cvc-element');
       } else {
-        document.getElementById('card-element').style.display = 'none';
+        document.getElementById('card-element-container').style.display = 'none';
       }
     }
+
+    // Stripeのセットアップ
+    var stripe = Stripe('pk_test_51PnN81KUcLKzkipSHyequBLJXlYm7A3z0RHhe0Ck76SEO6is0Bp9m2eqxJH8izrLNI3vqeYxFgnpu4c2AHoam92200FXru96oa');
+    var elements = stripe.elements();
+    var cardNumberElement = elements.create('cardNumber');
+    var cardExpiryElement = elements.create('cardExpiry');
+    var cardCvcElement = elements.create('cardCvc');
+
+    // itemIdをJavaScript内で定義
+    var itemId = '{{ $item->id }}'; // BladeからJavaScriptにitem_idを渡す
 
     // 購入ボタンがクリックされた時の処理
     document.getElementById('submit-button').addEventListener('click', function() {
       var paymentMethod = document.getElementById('selected-payment-method').innerText;
+      var itemPrice = parseInt('{{ $item->price }}', 10);
+      var amount = itemPrice * 100;
 
-      // 商品の価格をデータ属性から取得して、センに変換
-      var itemPrice = parseInt('{{ $item->price }}', 10); // 商品価格を整数として取得
-      var amount = itemPrice * 100; // センに変換
+      // 郵便番号を取得
+      var postalCode = document.getElementById('postal-code').value;
 
       if (paymentMethod === 'クレジットカード') {
-        stripe.createToken(cardElement).then(function(result) {
+        stripe.createToken(cardNumberElement).then(function(result) {
           if (result.error) {
             alert(result.error.message);
           } else {
-            // クレジットカード決済処理
-            processPayment(result.token.id, amount, paymentMethod);
+            processPayment(result.token.id, amount, paymentMethod, postalCode);
           }
         });
       } else if (paymentMethod === 'コンビニ払い' || paymentMethod === '銀行振込') {
-        savePurchaseData(paymentMethod, amount);
+        savePurchaseData(paymentMethod, amount, postalCode);
       }
     });
 
     // 決済処理を行う関数
-    function processPayment(token, amount, paymentMethod) {
+    function processPayment(token, amount, paymentMethod, postalCode) {
       fetch('/purchase/charge', {
           method: 'POST',
           headers: {
@@ -152,7 +152,8 @@
             token: token,
             item_id: itemId,
             amount: amount,
-            payment_method: paymentMethod
+            payment_method: paymentMethod,
+            postal_code: postalCode // 郵便番号を送信
           })
         })
         .then(function(response) {
@@ -160,8 +161,8 @@
         })
         .then(function(data) {
           if (data.success) {
-            alert('注文ありがとうございます'); //クレジットカードメッセージ
-            window.location.href = '/'; // 注文完了ページにリダイレクト
+            alert('注文ありがとうございます');
+            window.location.href = '/';
           } else {
             alert('決済に失敗しました。');
           }
@@ -173,8 +174,8 @@
     }
 
     // 購入情報を保存する関数
-    function savePurchaseData(paymentMethod, amount) {
-      fetch('/purchase/save', { // エンドポイントを正しいものに変更
+    function savePurchaseData(paymentMethod, amount, postalCode) {
+      fetch('/purchase/save', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -183,7 +184,8 @@
           body: JSON.stringify({
             item_id: itemId,
             amount: amount,
-            payment_method: paymentMethod
+            payment_method: paymentMethod,
+            postal_code: postalCode // 郵便番号を送信
           })
         })
         .then(function(response) {
@@ -203,7 +205,6 @@
         });
     }
   </script>
-
 </body>
 
 </html>
