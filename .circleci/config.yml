@@ -1,0 +1,28 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.4-node-browsers
+    steps:
+      - checkout
+      - run:
+          name: Install PHP Dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip
+            docker-php-ext-configure gd --with-freetype --with-jpeg
+            docker-php-ext-install gd
+            composer install
+      - run:
+          name: Run Tests
+          command: |
+            cp .env.example .env
+            php artisan key:generate
+            vendor/bin/phpunit --coverage-text
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
