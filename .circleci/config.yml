@@ -7,15 +7,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Ensure composer.json exists
-          command: |
-            if [ ! -f composer.json ]; then
-              echo "composer.json not found. Please ensure it exists in the project root."
-              exit 1
-            fi
-      - run:
           name: Install PHP Dependencies
           command: |
+            cd src
             sudo apt-get update
             sudo apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip
             sudo docker-php-ext-configure gd --with-freetype --with-jpeg
@@ -24,6 +18,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
+            cd src
             cp .env.example .env
             php artisan key:generate
             vendor/bin/phpunit --coverage-text
