@@ -7,6 +7,13 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Ensure composer.json exists
+          command: |
+            if [ ! -f composer.json ]; then
+              echo "composer.json not found. Please ensure it exists in the project root."
+              exit 1
+            fi
+      - run:
           name: Install PHP Dependencies
           command: |
             sudo apt-get update
