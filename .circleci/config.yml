@@ -11,8 +11,8 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip
-            docker-php-ext-configure gd --with-freetype --with-jpeg
-            docker-php-ext-install gd
+            sudo docker-php-ext-configure gd --with-freetype --with-jpeg
+            sudo docker-php-ext-install gd
             composer install
       - run:
           name: Run Tests
