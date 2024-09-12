@@ -21,7 +21,7 @@ jobs:
             sudo docker-php-ext-install pdo pdo_mysql
             composer install
       - run:
-          name: Install MySQL Client  # 追加するステップ
+          name: Install MySQL Client
           command: sudo apt-get install -y default-mysql-client
       - run:
           name: Set up environment
@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Test MySQL Connection
           command: |
-            mysql -u root -p$MYSQL_ROOT_PASSWORD -h $DB_HOST -e "SHOW DATABASES;"
+            mysql -u root -p$MYSQL_ROOT_PASSWORD -h mysql -e "SHOW DATABASES;"  # 修正：`mysql`ホストを使用
       - run:
           name: Run Database Migration
           command: |
