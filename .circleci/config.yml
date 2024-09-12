@@ -18,19 +18,26 @@ jobs:
             sudo apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip
             sudo docker-php-ext-configure gd --with-freetype --with-jpeg
             sudo docker-php-ext-install gd
-            sudo docker-php-ext-install pdo pdo_mysql   # PDO MySQLをインストール
+            sudo docker-php-ext-install pdo pdo_mysql
             composer install
       - run:
           name: Set up environment
           command: |
             cd src
-            cp .env.testing .env  # 環境ファイルを正しく設定
+            cp .env.testing .env
             php artisan key:generate
+      - run:
+          name: Wait for MySQL to be ready
+          command: sleep 10  # MySQLの起動を待つ
+      - run:
+          name: Test MySQL Connection  # ここでMySQL接続をテスト
+          command: |
+            mysql -u root -p$MYSQL_ROOT_PASSWORD -h $DB_HOST -e "SHOW DATABASES;"
       - run:
           name: Run Database Migration
           command: |
             cd src
-            php artisan migrate --env=testing --force  # テスト環境のマイグレーション
+            php artisan migrate --env=testing --force
       - run:
           name: Run Tests
           command: |
