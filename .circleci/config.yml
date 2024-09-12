@@ -21,12 +21,20 @@ jobs:
             sudo docker-php-ext-install pdo pdo_mysql   # PDO MySQLをインストール
             composer install
       - run:
+          name: Set up environment
+          command: |
+            cd src
+            cp .env.testing .env  # 環境ファイルを正しく設定
+            php artisan key:generate
+      - run:
+          name: Run Database Migration
+          command: |
+            cd src
+            php artisan migrate --env=testing --force  # テスト環境のマイグレーション
+      - run:
           name: Run Tests
           command: |
             cd src
-            cp .env.example .env
-            php artisan key:generate
-            php artisan migrate --env=testing --force
             vendor/bin/phpunit --coverage-text
 
 workflows:
