@@ -21,6 +21,9 @@ jobs:
             sudo docker-php-ext-install pdo pdo_mysql
             composer install
       - run:
+          name: Install MySQL Client  # 追加するステップ
+          command: sudo apt-get install -y mysql-client
+      - run:
           name: Set up environment
           command: |
             cd src
@@ -28,9 +31,9 @@ jobs:
             php artisan key:generate
       - run:
           name: Wait for MySQL to be ready
-          command: sleep 10  # MySQLの起動を待つ
+          command: sleep 10
       - run:
-          name: Test MySQL Connection  # ここでMySQL接続をテスト
+          name: Test MySQL Connection
           command: |
             mysql -u root -p$MYSQL_ROOT_PASSWORD -h $DB_HOST -e "SHOW DATABASES;"
       - run:
