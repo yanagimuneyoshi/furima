@@ -6,7 +6,7 @@ jobs:
       - image: circleci/php:7.4-node
       - image: circleci/mysql:5.7
         environment:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: laravel_pass
           MYSQL_DATABASE: testing_db
     steps:
       - checkout
