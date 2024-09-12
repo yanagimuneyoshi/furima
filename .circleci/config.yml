@@ -40,13 +40,13 @@ jobs:
       # Wait for MySQL to be ready (increase sleep time if needed)
       - run:
           name: Wait for MySQL to be ready
-          command: sleep 30  # Waiting longer to ensure MySQL is ready
+          command: sleep 60  # Waiting longer to ensure MySQL is ready
 
       # Test the connection to MySQL
       - run:
           name: Test MySQL Connection
           command: |
-            mysql -u root -plaravel_pass -h mysql -e "SHOW DATABASES;"
+            mysql -u root -plaravel_pass -h 127.0.0.1 -e "SHOW DATABASES;"
 
 
 
