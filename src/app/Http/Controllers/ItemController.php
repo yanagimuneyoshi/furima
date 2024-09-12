@@ -12,69 +12,27 @@ use Illuminate\Http\JsonResponse;
 
 class ItemController extends Controller
 {
-    // public function index(Request $request)
-    // {
-    //     $query = $request->input('query');
-    //     $tab = $request->input('tab', 'recommendations');
-
-    //     // すべての商品をカテゴリ情報とともに取得
-    //     $itemsQuery = Item::with('categories');
-
-    //     if ($query) {
-    //         $itemsQuery->where('title', 'LIKE', '%' . $query . '%');
-    //     }
-
-    //     $items = $itemsQuery->get()->unique('id');
-
-    //     // 未認証ユーザーが「mylist」タブを選択した場合はリダイレクト
-    //     if ($tab === 'mylist' && !auth()->check()) {
-    //         return redirect()->route('login');
-    //     }
-
-    //     // ログインしている場合、ログインしているユーザーのお気に入りを取得
-    //     if (auth()->check()) {
-    //         $favoritesQuery = auth()->user()->favorites()->with('categories');
-
-    //         if ($query) {
-    //             $favoritesQuery->where('title', 'LIKE', '%' . $query . '%');
-    //         }
-
-    //         $favorites = $favoritesQuery->get()->unique('id');
-    //     } else {
-    //         $favorites = collect(); // ログインしていない場合、空のコレクション
-    //     }
-
-    //     return view('item', compact('items', 'favorites'));
-    // }
     public function index(Request $request)
     {
-        // リクエストクエリとタブの情報をログに出力
-        Log::info('ItemController@index started', ['query' => $request->input('query'), 'tab' => $request->input('tab')]);
-
         $query = $request->input('query');
         $tab = $request->input('tab', 'recommendations');
 
         // すべての商品をカテゴリ情報とともに取得
         $itemsQuery = Item::with('categories');
-        Log::info('Item query initialized');
 
         if ($query) {
-            Log::info('Search query provided', ['query' => $query]);
             $itemsQuery->where('title', 'LIKE', '%' . $query . '%');
         }
 
         $items = $itemsQuery->get()->unique('id');
-        Log::info('Items retrieved', ['items_count' => count($items)]);
 
         // 未認証ユーザーが「mylist」タブを選択した場合はリダイレクト
         if ($tab === 'mylist' && !auth()->check()) {
-            Log::warning('Unauthenticated user tried to access mylist');
             return redirect()->route('login');
         }
 
         // ログインしている場合、ログインしているユーザーのお気に入りを取得
         if (auth()->check()) {
-            Log::info('User is authenticated', ['user_id' => auth()->id()]);
             $favoritesQuery = auth()->user()->favorites()->with('categories');
 
             if ($query) {
@@ -82,15 +40,12 @@ class ItemController extends Controller
             }
 
             $favorites = $favoritesQuery->get()->unique('id');
-            Log::info('Favorites retrieved', ['favorites_count' => count($favorites)]);
         } else {
             $favorites = collect(); // ログインしていない場合、空のコレクション
-            Log::info('User is not authenticated');
         }
 
         return view('item', compact('items', 'favorites'));
     }
-
 
     public function checkAuth(): JsonResponse
     {
