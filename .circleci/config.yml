@@ -46,7 +46,9 @@ jobs:
       - run:
           name: Test MySQL Connection
           command: |
-            mysql -u root -plaravel_pass -h mysql -e "SHOW DATABASES;"  # Corrected MySQL host
+            mysql -u root -plaravel_pass -h 127.0.0.1 -e "SHOW DATABASES;"
+
+
 
 
       # Run the database migrations in the test environment
