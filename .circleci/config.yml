@@ -84,11 +84,10 @@ jobs:
             chmod 600 ~/.ssh/id_rsa  # 適切な権限を付与
 
 
-# AWSへのデプロイを追加
       - run:
-          name: Deploy to AWS EC2
-          command: |
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@$EC2_PUBLIC_IP 'cd /home/ec2-user/coachtech-furima && git pull origin main && composer install && php artisan migrate --force'
+        name: Deploy to AWS EC2
+        command: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@$EC2_PUBLIC_IP 'cd /home/ec2-user/coachtech-furima && git pull origin main && composer install && php artisan migrate --force'
 
 
 
