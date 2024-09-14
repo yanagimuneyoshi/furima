@@ -65,6 +65,12 @@ jobs:
             cd src
             vendor/bin/phpunit --coverage-text  # Run the tests and show coverage
 
+      - run:
+          name: Debug EC2_PRIVATE_KEY
+          command: |
+              echo "$EC2_PRIVATE_KEY" | head -c 20  # 先頭20文字を表示（秘密鍵全体を表示しない）
+
+
       # Create SSH Key from environment variable
       - run:
           name: Create SSH Key
