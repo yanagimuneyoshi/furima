@@ -84,6 +84,7 @@ jobs:
             chmod 600 ~/.ssh/id_rsa  # 適切な権限を付与
 
 
+# AWSへのデプロイを追加
       - run:
         name: Deploy to AWS EC2
         command: |
