@@ -48,6 +48,10 @@ jobs:
           command: |
             mysql -u root -plaravel_pass -h 127.0.0.1 -e "SHOW DATABASES;"
 
+      - run:
+          name: Debug EC2_PUBLIC_IP
+          command: |
+              echo "$EC2_PUBLIC_IP"
 
 
 
