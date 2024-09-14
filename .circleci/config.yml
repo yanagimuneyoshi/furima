@@ -71,12 +71,14 @@ jobs:
               echo "$EC2_PRIVATE_KEY" | head -c 20  # 先頭20文字を表示（秘密鍵全体を表示しない）
 
 
-      # Create SSH Key from environment variable
+            # Create SSH Key from environment variable
       - run:
           name: Create SSH Key
           command: |
-            echo "$EC2_PRIVATE_KEY" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
+            mkdir -p ~/.ssh  # .ssh ディレクトリを作成
+            echo "$EC2_PRIVATE_KEY" > ~/.ssh/id_rsa  # 秘密鍵を作成
+            chmod 600 ~/.ssh/id_rsa  # 適切な権限を付与
+
 
 # AWSへのデプロイを追加
       - run:
