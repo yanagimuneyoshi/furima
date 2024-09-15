@@ -86,10 +86,11 @@ jobs:
 
 
 # AWSへのデプロイを追加
-      - run:
-          name: Deploy to AWS EC2
-          command: |
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@$EC2_PUBLIC_IP 'cd /home/ec2-user/coachtech-furima && git pull origin main && composer install && php artisan migrate --force'
+    - run:
+        name: Deploy to AWS EC2
+        command: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@$EC2_PUBLIC_IP 'cd /home/ec2-user/coachtech-furima && git pull origin main --rebase && composer install && php artisan migrate --force'
+
 
 
 workflows:
