@@ -79,9 +79,10 @@ jobs:
       - run:
           name: Create SSH Key
           command: |
-            mkdir -p ~/.ssh  # .ssh ディレクトリを作成
-            echo "$EC2_PRIVATE_KEY" > ~/.ssh/id_rsa  # 秘密鍵を作成
-            chmod 600 ~/.ssh/id_rsa  # 適切な権限を付与
+            mkdir -p ~/.ssh
+            echo "$EC2_PRIVATE_KEY" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+
 
 
 # AWSへのデプロイを追加
