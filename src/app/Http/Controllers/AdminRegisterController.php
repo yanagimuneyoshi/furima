@@ -20,7 +20,6 @@ class AdminRegisterController extends Controller
 
         $this->create($request->all());
 
-        // 管理者登録が完了したら、ログインページにリダイレクト
         return redirect()->route('admin.login')->with('success', '管理者登録が完了しました。ログインしてください。');
     }
 
@@ -39,7 +38,7 @@ class AdminRegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => 'admin', // 管理者権限を付与
+            'role' => 'admin',
         ]);
     }
 }

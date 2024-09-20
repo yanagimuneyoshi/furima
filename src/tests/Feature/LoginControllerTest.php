@@ -14,7 +14,6 @@ class LoginControllerTest extends TestCase
     {
         parent::setUp();
 
-        // CSRFトークン検証を無効化
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
     }
 
@@ -52,7 +51,6 @@ class LoginControllerTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
-    
     /**
      * ログアウトが正しく行われるかテスト.
      *

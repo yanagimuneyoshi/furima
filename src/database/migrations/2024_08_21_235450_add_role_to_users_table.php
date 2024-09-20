@@ -9,7 +9,7 @@ class AddRoleToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('user'); // 'user' か 'admin' の値を持つ
+            $table->string('role')->default('user');
         });
     }
 

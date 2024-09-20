@@ -74,7 +74,6 @@
           <div id="card-number-element"></div>
           <div id="card-expiry-element"></div>
           <div id="card-cvc-element"></div>
-          <!-- StripeのpostalCodeフィールドを削除し、HTMLのinputを使用 -->
           <input type="text" id="postal-code" maxlength="8">
         </div>
         <button class="buy-button" id="submit-button">購入する</button>
@@ -83,7 +82,6 @@
   </main>
 
   <script>
-    // 支払い方法の選択肢を表示/非表示にする関数
     function togglePaymentOptions() {
       var paymentMethodSelect = document.getElementById('payment-method');
       if (paymentMethodSelect.style.display === 'none' || paymentMethodSelect.style.display === '') {
@@ -93,7 +91,6 @@
       }
     }
 
-    // 支払い方法の変更を処理する関数
     function updatePaymentMethod() {
       var paymentMethod = document.getElementById('payment-method').value;
       document.getElementById('selected-payment-method').innerText = paymentMethod;
@@ -108,23 +105,18 @@
       }
     }
 
-    // Stripeのセットアップ
     var stripe = Stripe('pk_test_51PnN81KUcLKzkipSHyequBLJXlYm7A3z0RHhe0Ck76SEO6is0Bp9m2eqxJH8izrLNI3vqeYxFgnpu4c2AHoam92200FXru96oa');
     var elements = stripe.elements();
     var cardNumberElement = elements.create('cardNumber');
     var cardExpiryElement = elements.create('cardExpiry');
     var cardCvcElement = elements.create('cardCvc');
+    var itemId = '{{ $item->id }}';
 
-    // itemIdをJavaScript内で定義
-    var itemId = '{{ $item->id }}'; // BladeからJavaScriptにitem_idを渡す
-
-    // 購入ボタンがクリックされた時の処理
     document.getElementById('submit-button').addEventListener('click', function() {
       var paymentMethod = document.getElementById('selected-payment-method').innerText;
       var itemPrice = parseInt('{{ $item->price }}', 10);
       var amount = itemPrice * 100;
 
-      // 郵便番号を取得
       var postalCode = document.getElementById('postal-code').value;
 
       if (paymentMethod === 'クレジットカード') {
@@ -140,7 +132,6 @@
       }
     });
 
-    // 決済処理を行う関数
     function processPayment(token, amount, paymentMethod, postalCode) {
       fetch('/purchase/charge', {
           method: 'POST',
@@ -153,7 +144,7 @@
             item_id: itemId,
             amount: amount,
             payment_method: paymentMethod,
-            postal_code: postalCode // 郵便番号を送信
+            postal_code: postalCode
           })
         })
         .then(function(response) {
@@ -173,7 +164,6 @@
         });
     }
 
-    // 購入情報を保存する関数
     function savePurchaseData(paymentMethod, amount, postalCode) {
       fetch('/purchase/save', {
           method: 'POST',
@@ -185,7 +175,7 @@
             item_id: itemId,
             amount: amount,
             payment_method: paymentMethod,
-            postal_code: postalCode // 郵便番号を送信
+            postal_code: postalCode
           })
         })
         .then(function(response) {

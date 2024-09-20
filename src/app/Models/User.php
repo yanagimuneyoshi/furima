@@ -47,7 +47,6 @@ class User extends Authenticatable
     public function soldItems()
     {
         return $this->hasMany(Item::class, 'user_id');
-         // 注文が存在する商品
     }
 
     /**

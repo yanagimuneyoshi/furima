@@ -15,8 +15,8 @@ class CreateOrdersTable extends Migration
             $table->integer('total_price');
             $table->timestamps();
 
-            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade'); // ここを修正
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // ここを修正
+            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

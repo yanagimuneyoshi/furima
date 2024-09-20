@@ -4,10 +4,8 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+
 
 class UserControllerTest extends TestCase
 {
@@ -16,8 +14,6 @@ class UserControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        // CSRFトークン検証を無効化
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
     }
 
@@ -38,7 +34,6 @@ class UserControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // プロフィール更新用のデータ
         $data = [
             'name' => 'Updated Name',
             'postal_code' => '123-4567',
@@ -51,7 +46,6 @@ class UserControllerTest extends TestCase
         $response->assertRedirect(route('mypage'));
         $response->assertSessionHas('success', 'プロフィールが更新されました。');
 
-        // データベースに更新が反映されているか確認
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
             'name' => 'Updated Name',
@@ -66,16 +60,14 @@ class UserControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // 無効なデータ（バリデーションエラーが発生するはず）
         $data = [
-            'name' => '',  // 必須フィールドを空にする
-            'postal_code' => 'invalid_postal_code',  // 無効な郵便番号
-            'address' => '',  // 必須フィールドを空にする
+            'name' => '',
+            'postal_code' => 'invalid_postal_code',
+            'address' => '',
         ];
 
         $response = $this->actingAs($user)->post(route('profile.update'), $data);
 
-        // バリデーションエラーメッセージがセッションに存在するか確認
         $response->assertSessionHasErrors(['name', 'postal_code', 'address']);
     }
 
@@ -86,7 +78,6 @@ class UserControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // プロフィール更新用のデータ
         $data = [
             'name' => 'Updated Name',
             'postal_code' => '123-4567',
@@ -98,8 +89,6 @@ class UserControllerTest extends TestCase
 
         $response->assertRedirect(route('mypage'));
         $response->assertSessionHas('success', 'プロフィールが更新されました。');
-
-        // データベースに更新が反映されているか確認
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
             'name' => 'Updated Name',

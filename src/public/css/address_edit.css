@@ -88,3 +88,13 @@ input[type="text"] {
 .update-button:hover {
   background-color: #ff3b2f;
 }
+
+@media (max-width: 760px) {
+  .comment-container {
+    flex-direction: column;
+  }
+
+  .left-column {
+    margin-bottom: 20px;
+  }
+}

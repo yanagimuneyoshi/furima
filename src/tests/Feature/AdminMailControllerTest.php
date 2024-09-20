@@ -25,7 +25,6 @@ class AdminMailControllerTest extends TestCase
 
     $this->actingAs($adminUser);
 
-    // CSRFトークンの検証を無効化
     $this->withoutMiddleware();
 
     Mail::fake();

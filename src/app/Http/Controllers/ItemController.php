@@ -6,7 +6,7 @@ use App\Models\Item;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+
 
 use Illuminate\Http\JsonResponse;
 
@@ -17,7 +17,6 @@ class ItemController extends Controller
         $query = $request->input('query');
         $tab = $request->input('tab', 'recommendations');
 
-        // すべての商品をカテゴリ情報とともに取得
         $itemsQuery = Item::with('categories');
 
         if ($query) {
@@ -26,12 +25,10 @@ class ItemController extends Controller
 
         $items = $itemsQuery->get()->unique('id');
 
-        // 未認証ユーザーが「mylist」タブを選択した場合はリダイレクト
         if ($tab === 'mylist' && !auth()->check()) {
             return redirect()->route('login');
         }
 
-        // ログインしている場合、ログインしているユーザーのお気に入りを取得
         if (auth()->check()) {
             $favoritesQuery = auth()->user()->favorites()->with('categories');
 
@@ -41,7 +38,7 @@ class ItemController extends Controller
 
             $favorites = $favoritesQuery->get()->unique('id');
         } else {
-            $favorites = collect(); // ログインしていない場合、空のコレクション
+            $favorites = collect();
         }
 
         return view('item', compact('items', 'favorites'));

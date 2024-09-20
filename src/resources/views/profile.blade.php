@@ -61,7 +61,7 @@
 
   <script>
     document.querySelector('.profile-pic-label').addEventListener('click', function(event) {
-      event.preventDefault(); // デフォルトのクリックイベントを防止
+      event.preventDefault();
       document.getElementById('profile_pic').click();
     });
 

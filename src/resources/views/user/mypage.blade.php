@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="{{ asset('css/mypage.css') }}">
   <script>
     function switchTab(tabName) {
-      // タブの表示を切り替える
       var tabs = document.querySelectorAll('.tab-content');
       tabs.forEach(function(tab) {
         tab.style.display = 'none';
@@ -16,7 +15,6 @@
 
       document.getElementById(tabName).style.display = 'block';
 
-      // タブのアクティブ状態を切り替える
       var buttons = document.querySelectorAll('.tab');
       buttons.forEach(function(button) {
         button.classList.remove('active');
@@ -26,7 +24,6 @@
     }
 
     window.onload = function() {
-      // 初期表示: 出品した商品タブ
       switchTab('sold-items');
     };
   </script>
@@ -70,7 +67,6 @@
       <button class="tab" id="purchased-items-tab" onclick="switchTab('purchased-items')">購入した商品</button>
     </div>
 
-    <!-- 出品した商品 -->
     <div id="sold-items" class="tab-content">
       <div class="items">
         @forelse($soldItems as $item)
@@ -88,7 +84,6 @@
       </div>
     </div>
 
-    <!-- 購入した商品 -->
     <div id="purchased-items" class="tab-content" style="display: none;">
       <div class="items">
         @forelse($purchasedItems as $item)

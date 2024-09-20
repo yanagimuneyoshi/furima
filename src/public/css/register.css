@@ -75,3 +75,13 @@ input {
 .login-link a:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 760px) {
+  .comment-container {
+    flex-direction: column;
+  }
+
+  .left-column {
+    margin-bottom: 20px;
+  }
+}

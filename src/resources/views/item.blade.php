@@ -6,30 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>COACHTECHフリマ</title>
   <link rel="stylesheet" href="{{ asset('css/item.css') }}">
-
-  <!-- jQueryライブラリを先に読み込む -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
   <script>
     function switchTab(tabName) {
-      // タブのリロード
       var newUrl = window.location.origin + '/?tab=' + tabName;
-      window.location.href = newUrl; // リロードを実行する
+      window.location.href = newUrl;
     }
 
     function handleMyListClick() {
   $.ajax({
-    url: "{{ route('mylist.check') }}",  // コントローラーにリクエストを送るURL
+    url: "{{ route('mylist.check') }}",
     type: 'GET',
     success: function(response) {
       if (response.authenticated) {
-        switchTab('mylist'); // 認証されていればマイリストタブに切り替える
+        switchTab('mylist');
       } else {
-        window.location.href = "{{ route('login') }}"; // 認証されていなければログインページにリダイレクト
+        window.location.href = "{{ route('login') }}";
       }
     },
     error: function(xhr) {
-      if (xhr.status === 401) {  // 401エラーの場合の処理
+      if (xhr.status === 401) {
         window.location.href = "{{ route('login') }}";
       }
     }

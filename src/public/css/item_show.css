@@ -4,7 +4,6 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  /* 横スクロールを防止 */
 }
 
 header {
@@ -15,9 +14,7 @@ header {
   align-items: center;
   padding: 10px 20px;
   width: 100%;
-  /* 全幅を確保 */
   box-sizing: border-box;
-  /* パディングを含めて幅を計算 */
 }
 
 header .logo {
@@ -28,7 +25,6 @@ header .auth-buttons {
   display: flex;
   align-items: center;
   gap: 10px;
-  /* ボタン間のスペース */
 }
 
 .auth-buttons {
@@ -59,7 +55,6 @@ header .auth-buttons {
   align-items: flex-start;
   padding: 20px;
   flex-wrap: wrap;
-  /* レスポンシブのために要素を折り返し */
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -67,23 +62,19 @@ header .auth-buttons {
 .item-image {
   width: 100%;
   max-width: 500px;
-  /* 画像の最大幅を制限 */
   text-align: center;
   padding: 7%;
   box-sizing: border-box;
-  /* パディングを含めて幅を計算 */
 }
 
 .item-image img {
   max-width: 100%;
-  /* 画像の幅をコンテナに合わせる */
   border: 1px solid #ddd;
 }
 
 .item-details {
   width: 100%;
   max-width: 500px;
-  /* 詳細の最大幅を制限 */
   padding: 0 20px;
   box-sizing: border-box;
 }
@@ -109,7 +100,6 @@ header .auth-buttons {
   align-items: center;
   margin: 10px 0;
   flex-wrap: wrap;
-  /* レスポンシブ対応 */
 }
 
 .actions .favorite-count,
@@ -142,7 +132,6 @@ header .auth-buttons {
   margin: 5px 0;
 }
 
-/* レスポンシブデザイン */
 @media (max-width: 760px) {
   header {
     flex-direction: column;
@@ -168,7 +157,6 @@ header .auth-buttons {
   .item-details {
     width: 100%;
     max-width: none;
-    /* 100%幅を確保 */
   }
 
   .item-details {

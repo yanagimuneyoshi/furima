@@ -29,7 +29,6 @@ header {
   align-items: center;
 }
 
-/* フォームの file インプット要素を非表示にし、カスタムボタンを表示 */
 input[type="file"] {
   display: none;
 }
@@ -138,4 +137,14 @@ form.profile {
 
 .update-button:hover {
   background-color: #ff4500;
+}
+
+@media (max-width: 760px) {
+  .comment-container {
+    flex-direction: column;
+  }
+
+  .left-column {
+    margin-bottom: 20px;
+  }
 }

@@ -1,6 +1,4 @@
-
 <?php
-
 
 
 use Illuminate\Database\Migrations\Migration;
@@ -13,7 +11,7 @@ class AddProfilePicToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             if (!Schema::hasColumn('users', 'profile_pic')) {
-                $table->string('profile_pic')->nullable()->after('building'); // 'building' カラムの後に 'profile_pic' を追加
+                $table->string('profile_pic')->nullable()->after('building');
             }
         });
     }

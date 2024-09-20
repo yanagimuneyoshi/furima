@@ -7,11 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    // public function index()
-    // {
-    //     $user = Auth::user();
-    //     return view('user.mypage', compact('user'));
-    // }
+
     public function index()
     {
         $user = Auth::user();
@@ -40,7 +36,6 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('profile_pic')) {
-            // 古いプロフィール画像を削除する（必要に応じて）
             if ($user->profile_pic && \Storage::exists('public/' . $user->profile_pic)) {
                 \Storage::delete('public/' . $user->profile_pic);
             }

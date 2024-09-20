@@ -71,13 +71,10 @@ class PurchaseController extends Controller
 
         $correctedAmount = $request->input('amount') / 100;
 
-        // クレジットカードの場合のみ金額を修正して保存
         $this->saveOrder($request->input('item_id'), $request->user()->id, $correctedAmount);
       } else {
-        // クレジットカード以外の支払い方法の場合
         $correctedAmount = $request->input('amount') / 100;
 
-        // コンビニ払い、銀行振込の場合も修正した金額を保存
         $this->saveOrder($request->input('item_id'), $request->user()->id, $correctedAmount);
 
       }
@@ -102,7 +99,7 @@ class PurchaseController extends Controller
     $order = Order::create([
       'item_id' => $request->item_id,
       'user_id' => auth()->id(),
-      'total_price' => $request->input('amount') / 100, // コンビニ払い、銀行振込の場合も金額を修正
+      'total_price' => $request->input('amount') / 100,
     ]);
 
     return response()->json(['success' => true]);

@@ -9,10 +9,10 @@ class CreateCategoriesTable extends Migration
     public function up()
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->id(); // ここを修正
+            $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('name');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // ここを修正
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

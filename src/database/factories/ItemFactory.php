@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Item;
-use App\Models\User; // Userモデルをインポート
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ItemFactory extends Factory
@@ -17,7 +17,7 @@ class ItemFactory extends Factory
             'description' => $this->faker->paragraph,
             'price' => $this->faker->randomNumber(4),
             'condition' => $this->faker->word,
-            'user_id' => User::factory(), // 新規作成されたユーザーを関連付け
+            'user_id' => User::factory(),
         ];
     }
 }

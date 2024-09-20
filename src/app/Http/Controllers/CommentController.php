@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Comment;
-use Auth;
+
 
 class CommentController extends Controller
 {
@@ -39,5 +39,4 @@ class CommentController extends Controller
     return back()->with('success', 'コメントが削除されました。');
   }
 
-  
 }

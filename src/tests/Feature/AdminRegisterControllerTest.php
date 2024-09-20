@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,7 +13,6 @@ class AdminRegisterControllerTest extends TestCase
   {
     parent::setUp();
 
-    // CSRFトークン検証を無効化
     $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
   }
 
@@ -47,10 +45,10 @@ class AdminRegisterControllerTest extends TestCase
   public function testAdminRegistrationValidationFails()
   {
     $response = $this->post(route('admin.register'), [
-      'name' => '', // 名前が空の状態で送信
-      'email' => 'not-an-email', // 無効なメールアドレス
-      'password' => 'short', // 短すぎるパスワード
-      'password_confirmation' => 'different', // パスワード確認が一致しない
+      'name' => '',
+      'email' => 'not-an-email',
+      'password' => 'short',
+      'password_confirmation' => 'different',
     ]);
 
     $response->assertStatus(302);

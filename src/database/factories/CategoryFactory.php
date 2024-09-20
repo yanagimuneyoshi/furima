@@ -13,7 +13,6 @@ class CategoryFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-            // 他のフィールドは必要に応じて設定
         ];
     }
 }

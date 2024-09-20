@@ -122,7 +122,16 @@ form {
 
 .image-preview img {
   max-width: 150px;
-  /* 画像の最大幅を150pxに設定 */
   max-height: 150px;
-  /* 画像の最大高さを150pxに設定 */
+}
+
+
+@media (max-width: 760px) {
+  .comment-container {
+    flex-direction: column;
+  }
+
+  .left-column {
+    margin-bottom: 20px;
+  }
 }

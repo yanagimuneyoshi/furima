@@ -85,7 +85,6 @@ jobs:
 
 
 # AWSへのデプロイを追加
-      # AWSへのデプロイを追加
       - run:
           name: Deploy to AWS EC2
           command: |

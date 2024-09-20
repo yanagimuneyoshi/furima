@@ -15,7 +15,7 @@ class SearchController extends Controller
 
     if ($tab === 'mylist') {
       if (!Auth::check()) {
-        return redirect()->route('login'); // 認証されていない場合はログインページにリダイレクト
+        return redirect()->route('login');
       }
 
       $favorites = Auth::user()->favorites()
@@ -24,7 +24,7 @@ class SearchController extends Controller
           $q->where('name', 'LIKE', "%{$query}%");
         })
         ->get()
-        ->unique('id'); // 重複を除去
+        ->unique('id');
 
       return view('item', ['favorites' => $favorites, 'items' => collect(), 'activeTab' => $tab]);
     } else {

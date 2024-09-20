@@ -3,11 +3,10 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\URL;
+
 
 class RegisterControllerTest extends TestCase
 {
@@ -16,8 +15,7 @@ class RegisterControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
-        // CSRFトークン検証を無効化
+
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
     }
 
@@ -27,7 +25,7 @@ class RegisterControllerTest extends TestCase
         $response = $this->get('/register');
 
         $response->assertStatus(200);
-        $response->assertViewIs('auth.register'); // ビューが正しく表示されるかを確認
+        $response->assertViewIs('auth.register');
     }
 
     /** @test */
@@ -55,10 +53,10 @@ class RegisterControllerTest extends TestCase
     {
         $response = $this->from('/register')->post('/register', [
             'email' => 'invalid-email',
-            'password' => 'pass', // パスワードが短すぎる
+            'password' => 'pass',
         ]);
 
         $response->assertRedirect('/register');
-        $response->assertSessionHasErrors(['email', 'password']); // バリデーションエラーの確認
+        $response->assertSessionHasErrors(['email', 'password']);
     }
 }
