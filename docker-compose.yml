@@ -15,6 +15,9 @@ services:
         build: ./docker/php
         volumes:
             - ./src:/var/www/
+        depends_on:
+            - mysql
+        command: ["wait-for-it", "mysql:3306", "--", "php-fpm"]  # MySQLの起動を待機してから起動
 
     mysql:
         image: mysql:8.0.26
