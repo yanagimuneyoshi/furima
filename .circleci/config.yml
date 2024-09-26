@@ -42,11 +42,11 @@ jobs:
       #     name: Wait for MySQL to be ready
       #     command: sleep 60  # Waiting longer to ensure MySQL is ready
       - run:
-        name: Wait for MySQL to be ready
-        command: |
-          sudo curl -o /usr/local/bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-          sudo chmod +x /usr/local/bin/wait-for-it
-          /usr/local/bin/wait-for-it mysql:3306 --timeout=60 --strict -- echo "MySQL is up"
+          name: Wait for MySQL to be ready
+          command: |
+            sudo curl -o /usr/local/bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+            sudo chmod +x /usr/local/bin/wait-for-it
+            /usr/local/bin/wait-for-it mysql:3306 --timeout=60 --strict -- echo "MySQL is up"
 
 
       # Test the connection to MySQL
