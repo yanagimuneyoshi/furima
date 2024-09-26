@@ -38,15 +38,21 @@ jobs:
             php artisan key:generate  # Generate application key
 
       # Wait for MySQL to be ready (increase sleep time if needed)
+      # - run:
+      #     name: Wait for MySQL to be ready
+      #     command: sleep 60  # Waiting longer to ensure MySQL is ready
       - run:
           name: Wait for MySQL to be ready
-          command: sleep 60  # Waiting longer to ensure MySQL is ready
+          command: |
+            curl -o /usr/local/bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+            chmod +x /usr/local/bin/wait-for-it
+            /usr/local/bin/wait-for-it mysql:3306 --timeout=60 --strict -- echo "MySQL is up"
 
       # Test the connection to MySQL
       - run:
           name: Test MySQL Connection
           command: |
-            mysql -u root -plaravel_pass -h 127.0.0.1 -e "SHOW DATABASES;"
+            mysql -u root -plaravel_pass -h mysql -e "SHOW DATABASES;"
 
       - run:
           name: Debug EC2_PUBLIC_IP
