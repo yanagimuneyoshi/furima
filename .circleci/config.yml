@@ -46,7 +46,7 @@ jobs:
       - run:
           name: Test MySQL Connection
           command: |
-            mysql -u root -plaravel_pass -h mysql -e "SHOW DATABASES;"
+            mysql -u root -plaravel_pass -h 127.0.0.1 -e "SHOW DATABASES;"
 
       - run:
           name: Debug EC2_PUBLIC_IP
