@@ -4,10 +4,12 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.4-node
-      - image: circleci/mysql:5.7
+      - image: circleci/mysql:8.0
         environment:
-          MYSQL_ROOT_PASSWORD: laravel_pass
-          MYSQL_DATABASE: testing_db
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: laravel_db
+          MYSQL_USER: laravel_user
+          MYSQL_PASSWORD: laravel_pass
     steps:
       # Checkout the code
       - checkout
@@ -40,14 +42,13 @@ jobs:
       # Wait for MySQL to be ready (increase sleep time if needed)
       - run:
           name: Wait for MySQL to be ready
-          # command: sleep 60  # Waiting longer to ensure MySQL is ready
-          command: |
-            dockerize -wait tcp://mysql:3306 -timeout 60s
+          command: sleep 60  # Waiting longer to ensure MySQL is ready
+          
       # Test the connection to MySQL
       - run:
           name: Test MySQL Connection
           command: |
-            mysql -u root -plaravel_pass -h 127.0.0.1 -e "SHOW DATABASES;"
+            mysql -u root -proot -h 127.0.0.1 -e "SHOW DATABASES;"
 
       - run:
           name: Debug EC2_PUBLIC_IP
