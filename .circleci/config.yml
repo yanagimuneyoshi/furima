@@ -40,8 +40,9 @@ jobs:
       # Wait for MySQL to be ready (increase sleep time if needed)
       - run:
           name: Wait for MySQL to be ready
-          command: sleep 60  # Waiting longer to ensure MySQL is ready
-
+          # command: sleep 60  # Waiting longer to ensure MySQL is ready
+          command: |
+            dockerize -wait tcp://mysql:3306 -timeout 60s
       # Test the connection to MySQL
       - run:
           name: Test MySQL Connection
