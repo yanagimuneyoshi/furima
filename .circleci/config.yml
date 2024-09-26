@@ -60,7 +60,7 @@ jobs:
           name: Run Database Migration
           command: |
             cd src
-            php artisan migrate --env=testing --force  # Use force to ensure migrations are applied
+            php artisan migrate --env --force  # Use force to ensure migrations are applied
 
       # Run the PHPUnit tests
       - run:
