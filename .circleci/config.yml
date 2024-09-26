@@ -3,97 +3,61 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/php:7.4-node
-      - image: circleci/mysql:8.0
-        environment:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: laravel_db
-          MYSQL_USER: laravel_user
-          MYSQL_PASSWORD: laravel_pass
+      - image: circleci/php:7.4-node  # メインのイメージ
     steps:
-      # Checkout the code
+      # コードをチェックアウト
       - checkout
 
-      # Install PHP dependencies and required extensions
+      # PHP依存パッケージと拡張モジュールのインストール
       - run:
           name: Install PHP Dependencies
           command: |
-            cd src
             sudo apt-get update
             sudo apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip
-            sudo docker-php-ext-configure gd --with-freetype --with-jpeg
-            sudo docker-php-ext-install gd
-            sudo docker-php-ext-install pdo pdo_mysql
+            docker-php-ext-configure gd --with-freetype --with-jpeg
+            docker-php-ext-install gd
+            docker-php-ext-install pdo pdo_mysql
             composer install
 
-      # Install MySQL client to interact with the MySQL database
-      - run:
-          name: Install MySQL Client
-          command: sudo apt-get install -y default-mysql-client
-
-      # Set up the environment variables and application key
+      # 環境変数とアプリケーションキーの設定
       - run:
           name: Set up environment
           command: |
-            cd src
-            cp .env.testing .env  # Use .env.testing for test environment
-            php artisan key:generate  # Generate application key
+            cp .env.testing .env  # テスト用環境をセットアップ
+            php artisan key:generate
 
-      # Wait for MySQL to be ready (increase sleep time if needed)
+      # Docker Composeを使ってサービスを起動
+      - run:
+          name: Run Docker Compose
+          command: docker-compose up -d
+
+      # MySQLの起動を待機
       - run:
           name: Wait for MySQL to be ready
-          # command: sleep 60  # Waiting longer to ensure MySQL is ready
-          command: dockerize -wait tcp://mysql:3306 -timeout 60s
-      # Test the connection to MySQL
+          command: dockerize -wait tcp://localhost:3306 -timeout 60s
+
+      # MySQL接続テスト
       - run:
           name: Test MySQL Connection
-          command: |
-            mysql -u root -proot -h 127.0.0.1 -e "SHOW DATABASES;"
+          command: mysql -u root -proot -h 127.0.0.1 -e "SHOW DATABASES;"
 
-      - run:
-          name: Debug EC2_PUBLIC_IP
-          command: |
-              echo "$EC2_PUBLIC_IP"
-
-
-
-      # Run the database migrations in the test environment
+      # データベースマイグレーションを実行
       - run:
           name: Run Database Migration
-          command: |
-            cd src
-            php artisan migrate --env=testing --force  # Use force to ensure migrations are applied
+          command: php artisan migrate --env=testing --force
 
-      # Run the PHPUnit tests
+      # PHPUnitテストを実行
       - run:
           name: Run Tests
-          command: |
-            cd src
-            vendor/bin/phpunit --coverage-text  # Run the tests and show coverage
+          command: vendor/bin/phpunit --coverage-text
 
-      - run:
-          name: Debug EC2_PRIVATE_KEY
-          command: |
-              echo "$EC2_PRIVATE_KEY" | head -c 20  # 先頭20文字を表示（秘密鍵全体を表示しない）
-
-
-            # Create SSH Key from environment variable
-      - run:
-          name: Create SSH Key
-          command: |
-            mkdir -p ~/.ssh
-            echo "$EC2_PRIVATE_KEY" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-
-
-# AWSへのデプロイを追加
+      # SSHキーを作成してAWSにデプロイ
       - run:
           name: Deploy to AWS EC2
           command: |
+            echo "$EC2_PRIVATE_KEY" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
             ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@$EC2_PUBLIC_IP 'cd /home/ec2-user/coachtech-furima/src && git pull origin main && composer install && php artisan migrate --force'
-
-
-
 
 workflows:
   version: 2
