@@ -10,6 +10,7 @@ jobs:
           MYSQL_DATABASE: laravel_db
           MYSQL_USER: laravel_user
           MYSQL_PASSWORD: laravel_pass
+          
     steps:
       # Checkout the code
       - checkout
