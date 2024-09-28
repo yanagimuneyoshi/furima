@@ -27,11 +27,6 @@ header .auth-buttons {
   gap: 10px;
 }
 
-.auth-buttons {
-  display: flex;
-  align-items: center;
-}
-
 .auth-buttons button,
 .auth-buttons a {
   margin-left: 10px;
@@ -51,16 +46,18 @@ header .auth-buttons {
 
 .item-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: flex-start;
   padding: 20px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  /* 横並びに設定 */
   max-width: 100%;
   box-sizing: border-box;
 }
 
 .item-image {
-  width: 100%;
+  width: 50%;
+  /* 画像を50%幅に設定 */
   max-width: 500px;
   text-align: center;
   padding: 7%;
@@ -73,8 +70,8 @@ header .auth-buttons {
 }
 
 .item-details {
-  width: 100%;
-  max-width: 500px;
+  width: 50%;
+  /* 商品詳細も50%幅に設定 */
   padding: 0 20px;
   box-sizing: border-box;
 }
@@ -173,4 +170,3 @@ header .auth-buttons {
     margin: 10px 0;
   }
 }
-

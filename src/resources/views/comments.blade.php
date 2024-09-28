@@ -58,7 +58,7 @@
           <div class="comments-list">
             @foreach($comments as $comment)
             <div class="comment">
-              <p class="comment-user">{{ $comment->user->name }}</p>
+              <p class="comment-user">{{ $comment->user->name ?? '名前なし'  }}</p>
               <p class="comment-body">{{ $comment->content }}</p>
               @if(Auth::check() && Auth::user()->id == $comment->user_id)
               <form method="POST" action="{{ route('comments.destroy', $comment->id) }}" style="display:inline;">

@@ -37,6 +37,16 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/purchase/{item_id}', [PurchaseController::class, 'show'])->name('purchase');
   Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.address');
   Route::post('/purchase/address/{item_id}', [PurchaseController::class, 'updateAddress'])->name('address.update');
+
+  Route::post('/comments/{item_id}', [CommentController::class, 'store'])->name('comments.store');
+  Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+
+  Route::post('/buy/{id}', [PurchaseController::class, 'buy'])->name('buy');
+  Route::post('/purchase/payment/{item_id}', [PurchaseController::class, 'processPayment'])->name('stripe.payment');
+  Route::post('/purchase/charge', [PurchaseController::class, 'charge']);
+  Route::post('/purchase/save', [PurchaseController::class, 'savePurchaseData']);
+
 });
 
 Route::get('/item/{item}', [ItemController::class, 'show'])->name('item.show');
@@ -45,14 +55,7 @@ Route::get('/search', [SearchController::class, 'search'])->name('item.search');
 
 
 Route::get('/comments/{item_id}', [CommentController::class, 'show'])->name('comments.show');
-Route::post('/comments/{item_id}', [CommentController::class, 'store'])->name('comments.store');
-Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
-
-Route::post('/buy/{id}', [PurchaseController::class, 'buy'])->name('buy');
-Route::post('/purchase/payment/{item_id}', [PurchaseController::class, 'processPayment'])->name('stripe.payment');
-Route::post('/purchase/charge', [PurchaseController::class, 'charge']);
-Route::post('/purchase/save', [PurchaseController::class, 'savePurchaseData']);
 
 
 Route::get('/admin/register', [AdminRegisterController::class, 'showRegistrationForm'])->name('admin.register');

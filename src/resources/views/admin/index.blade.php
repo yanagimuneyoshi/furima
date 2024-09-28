@@ -59,7 +59,7 @@
       <tr>
         <td>{{ $comment->id }}</td>
         <td>{{ $comment->content }}</td>
-        <td>{{ $comment->user->name }}</td>
+        <td>{{ $comment->user->name ?? '名前なし'  }}</td>
         <td>
           <form action="{{ route('admin.comments.destroy', $comment) }}" method="POST">
             @csrf
