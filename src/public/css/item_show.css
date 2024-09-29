@@ -50,14 +50,12 @@ header .auth-buttons {
   align-items: flex-start;
   padding: 20px;
   flex-wrap: nowrap;
-  /* 横並びに設定 */
   max-width: 100%;
   box-sizing: border-box;
 }
 
 .item-image {
   width: 50%;
-  /* 画像を50%幅に設定 */
   max-width: 500px;
   text-align: center;
   padding: 7%;
@@ -71,7 +69,6 @@ header .auth-buttons {
 
 .item-details {
   width: 50%;
-  /* 商品詳細も50%幅に設定 */
   padding: 0 20px;
   box-sizing: border-box;
 }

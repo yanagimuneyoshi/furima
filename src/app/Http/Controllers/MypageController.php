@@ -22,7 +22,6 @@ class MypageController extends Controller
     $purchasedItemsQuery = $user->purchasedItems();
 
 
-
     if ($query) {
       $soldItemsQuery->where(function ($q) use ($query) {
         $q->where('title', 'LIKE', "%{$query}%")

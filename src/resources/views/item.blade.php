@@ -40,12 +40,10 @@
     <a href="/" class="logo">
       <img src="{{ asset('images/logo.svg') }}" alt="COACHTECHロゴ" />
     </a>
-
     <form action="{{ route('item.search') }}" method="GET" class="search-form" id="search-form">
       <input type="text" name="query" placeholder="なにをお探しですか？" class="search-bar" id="search-bar">
       <input type="hidden" name="tab" id="tab" value="{{ request('tab', 'recommendations') }}">
     </form>
-
     <div class="auth-buttons">
       @if (Auth::check())
       <form method="POST" action="{{ route('logout') }}">
@@ -60,13 +58,11 @@
       <a href="{{ route('sell') }}" class="sell">出品</a>
     </div>
   </header>
-
   <main>
     <div class="tabs">
       <button class="tab {{ request('tab', 'recommendations') === 'recommendations' ? 'active' : '' }}" id="recommendations-tab" onclick="switchTab('recommendations')">おすすめ</button>
       <button class="tab {{ request('tab') === 'mylist' ? 'active' : '' }}" id="mylist-tab" onclick="handleMyListClick()">マイリスト</button>
     </div>
-
     <div id="recommendations-content" class="tab-content {{ request('tab', 'recommendations') === 'recommendations' ? 'active' : '' }}">
       <div class="items">
         @if($items->isEmpty() && request()->has('query'))
@@ -93,7 +89,6 @@
         @endif
       </div>
     </div>
-
     @if (Auth::check())
     <div id="mylist-content" class="tab-content {{ request('tab') === 'mylist' ? 'active' : '' }}">
       <div class="items">

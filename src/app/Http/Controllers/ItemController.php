@@ -54,15 +54,6 @@ class ItemController extends Controller
     }
 
 
-
-
-
-
-
-
-
-
-
     public function create()
     {
         return view('sell');
@@ -102,8 +93,6 @@ class ItemController extends Controller
 
     public function show($item_id)
     {
-        // $item = Item::with('categories')->findOrFail($item_id);
-        // return view('item_show', compact('item'));
 
         $item = Item::with('categories')->findOrFail($item_id);
         $isFavorited = Auth::check() ? Auth::user()->favorites()->where('item_id', $item_id)->exists() : false;

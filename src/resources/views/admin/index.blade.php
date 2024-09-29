@@ -10,7 +10,6 @@
 
 <body>
   <h1>管理画面</h1>
-
   <h2>ユーザー一覧</h2>
   <table>
     <thead>
@@ -43,7 +42,6 @@
       @endforeach
     </tbody>
   </table>
-
   <h2>コメント一覧</h2>
   <table>
     <thead>

@@ -9,30 +9,25 @@
 
 <body>
   <h1>メール送信</h1>
-
   @if(session('success'))
   <div class="alert alert-success">
     {{ session('success') }}
   </div>
   @endif
-
   <form action="{{ route('admin.sendMail') }}" method="POST">
     @csrf
     <div>
       <label for="email">送信先メールアドレス</label>
       <input type="email" name="email" value="{{ request('email') }}" required>
     </div>
-
     <div>
       <label for="title">件名</label>
       <input type="text" name="title" required>
     </div>
-
     <div>
       <label for="body">メッセージ本文</label>
       <textarea name="body" required></textarea>
     </div>
-
     <div>
       <button type="submit">送信</button>
     </div>

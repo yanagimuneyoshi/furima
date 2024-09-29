@@ -14,7 +14,6 @@
     <a href="/" class="logo">
       <img src="{{ asset('images/logo.svg') }}" alt="COACHTECHロゴ" />
     </a>
-
     <div class="auth-buttons">
       @if (Auth::check())
       <form method="POST" action="{{ route('logout') }}">

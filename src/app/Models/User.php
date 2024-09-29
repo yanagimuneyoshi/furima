@@ -49,12 +49,8 @@ class User extends Authenticatable
         return $this->hasMany(Item::class, 'user_id');
     }
 
-    /**
-     * ユーザーが購入した商品
-     */
     public function purchasedItems()
     {
-        // return $this->hasManyThrough(Item::class, Order::class, 'user_id', 'id', 'id', 'item_id');
         return $this->belongsToMany(Item::class, 'orders', 'user_id', 'item_id');
     }
 

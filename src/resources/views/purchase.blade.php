@@ -94,7 +94,6 @@
     function updatePaymentMethod() {
       var paymentMethod = document.getElementById('payment-method').value;
       document.getElementById('selected-payment-method').innerText = paymentMethod;
-
       if (paymentMethod === 'クレジットカード') {
         document.getElementById('card-element-container').style.display = 'block';
         cardNumberElement.mount('#card-number-element');
@@ -116,9 +115,7 @@
       var paymentMethod = document.getElementById('selected-payment-method').innerText;
       var itemPrice = parseInt('{{ $item->price }}', 10);
       var amount = itemPrice * 100;
-
       var postalCode = document.getElementById('postal-code').value;
-
       if (paymentMethod === 'クレジットカード') {
         stripe.createToken(cardNumberElement).then(function(result) {
           if (result.error) {

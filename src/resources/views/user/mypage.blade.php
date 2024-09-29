@@ -12,14 +12,11 @@
       tabs.forEach(function(tab) {
         tab.style.display = 'none';
       });
-
       document.getElementById(tabName).style.display = 'block';
-
       var buttons = document.querySelectorAll('.tab');
       buttons.forEach(function(button) {
         button.classList.remove('active');
       });
-
       document.getElementById(tabName + '-tab').classList.add('active');
     }
 
@@ -37,7 +34,6 @@
     <form action="{{ route('mypage') }}" method="GET" class="search-form">
       <input type="text" name="query" placeholder="なにをお探しですか？" class="search-bar" value="{{ request('query') }}">
     </form>
-
     <div class="auth-buttons">
       <form method="POST" action="{{ route('logout') }}">
         @csrf
@@ -61,12 +57,10 @@
         <a href="{{ route('profile.edit') }}" class="edit-profile">プロフィールを編集</a>
       </div>
     </div>
-
     <div class="tabs">
       <button class="tab active" id="sold-items-tab" onclick="switchTab('sold-items')">出品した商品</button>
       <button class="tab" id="purchased-items-tab" onclick="switchTab('purchased-items')">購入した商品</button>
     </div>
-
     <div id="sold-items" class="tab-content">
       <div class="items">
         @forelse($soldItems as $item)
@@ -83,7 +77,6 @@
         @endforelse
       </div>
     </div>
-
     <div id="purchased-items" class="tab-content" style="display: none;">
       <div class="items">
         @forelse($purchasedItems as $item)
