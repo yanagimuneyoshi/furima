@@ -11,10 +11,8 @@ jobs:
           MYSQL_USER: laravel_user
           MYSQL_PASSWORD: laravel_pass
     steps:
-      # Checkout the code
       - checkout
 
-      # Install PHP dependencies and required extensions
       - run:
           name: Install PHP Dependencies
           command: |
@@ -26,12 +24,10 @@ jobs:
             sudo docker-php-ext-install pdo pdo_mysql
             composer install
 
-      # Install MySQL client to interact with the MySQL database
       - run:
           name: Install MySQL Client
           command: sudo apt-get install -y default-mysql-client
 
-      # Set up the environment variables and application key
       - run:
           name: Set up environment
           command: |
@@ -39,12 +35,10 @@ jobs:
             cp .env.testing .env  # Use .env.testing for test environment
             php artisan key:generate  # Generate application key
 
-      # Wait for MySQL to be ready (increase sleep time if needed)
       - run:
           name: Wait for MySQL to be ready
-          command: sleep 60  # Waiting longer to ensure MySQL is ready
-          
-      # Test the connection to MySQL
+          command: sleep 60
+
       - run:
           name: Test MySQL Connection
           command: |
@@ -57,14 +51,13 @@ jobs:
 
 
 
-      # Run the database migrations in the test environment
       - run:
           name: Run Database Migration
           command: |
             cd src
             php artisan migrate --env=testing --force  # Use force to ensure migrations are applied
 
-      # Run the PHPUnit tests
+
       - run:
           name: Run Tests
           command: |
@@ -77,7 +70,7 @@ jobs:
               echo "$EC2_PRIVATE_KEY" | head -c 20  # 先頭20文字を表示（秘密鍵全体を表示しない）
 
 
-            # Create SSH Key from environment variable
+
       - run:
           name: Create SSH Key
           command: |
@@ -86,13 +79,10 @@ jobs:
             chmod 600 ~/.ssh/id_rsa
 
 
-# AWSへのデプロイを追加
       - run:
           name: Deploy to AWS EC2
           command: |
             ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@$EC2_PUBLIC_IP 'cd /home/ec2-user/coachtech-furima/src && git pull origin main && composer install && php artisan migrate --force'
-
-
 
 
 workflows:
